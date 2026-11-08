@@ -1,0 +1,20 @@
+{
+  "name": "dreamdex-build-proof",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Read-only market-data auditor for dreamDEX: cross-checks the REST API, the @somnia-chain/markets-sdk, and the WebSocket feed against each other.",
+  "engines": {
+    "node": ">=21"
+  },
+  "scripts": {
+    "audit": "node src/index.js --env both",
+    "audit:testnet": "node src/index.js --env shannon",
+    "audit:mainnet": "node src/index.js --env mainnet",
+    "audit:json": "node src/index.js --env both --json"
+  },
+  "dependencies": {
+    "@somnia-chain/markets-sdk": "^0.32.1",
+    "viem": "^2.18.5"
+  }
+}
