@@ -1,0 +1,4 @@
+/candles  n=94  first=2026-08-06  2026-08-06: volume=1152641.11  open=0.0894  high=0.0916
+/volume   2026-08-06: {"baseVolume":"2988352.82","baseVolumeRaw":"2988352820000000000000000","quoteVolume":"271216.913805","quoteVolumeRaw":"271216913805000000000000","since":1785974400000,"symbol":"SOMI:USDso","until":1786060800000}
+ws ohlcv  n=100  first=2026-07-31  2026-08-06: volume=2988352.82  open=0.0906  high=0.0929
+ratio ws//candles = 2.593x   open delta = 0.001200

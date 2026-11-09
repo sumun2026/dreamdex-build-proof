@@ -1,0 +1,57 @@
+=== 1. REST /markets/SOMI:USDso/candles — param discovery ===
+  "(none)                        " 400 ct=application/json Error-Name=missing_field | {"description":"Query argument interval is required, but not found","name":"missing_field","status":400} 
+  "?timeframe=1m                 " 400 ct=application/json Error-Name=missing_field | {"description":"Query argument interval is required, but not found","name":"missing_field","status":400} 
+  "?interval=1m                  " 200 ct=application/json Error-Name=- | {"candles":[{"close":"0.1674","high":"0.1674","low":"0.1674","open":"0.1674","timestamp":1794075300000,"volume":"890"},{"close":"0
+  "?resolution=1m                " 400 ct=application/json Error-Name=missing_field | {"description":"Query argument interval is required, but not found","name":"missing_field","status":400} 
+  "?timeframe=1m&limit=5         " 400 ct=application/json Error-Name=missing_field | {"description":"Query argument interval is required, but not found","name":"missing_field","status":400} 
+  "?timeframe=1m&from=0          " 400 ct=application/json Error-Name=missing_field | {"description":"Query argument interval is required, but not found","name":"missing_field","status":400} 
+  "?timeframe=1m&since=0&until=0 " 400 ct=application/json Error-Name=missing_field | {"description":"Query argument interval is required, but not found","name":"missing_field","status":400} 
+
+=== 2. invalid interval wording (REST) ===
+  timeframe=1m     400 missing_field | {"description":"Query argument interval is required, but not found","name":"missing_field","sta
+  timeframe=5m     400 missing_field | {"description":"Query argument interval is required, but not found","name":"missing_field","sta
+  timeframe=15m    400 missing_field | {"description":"Query argument interval is required, but not found","name":"missing_field","sta
+  timeframe=1h     400 missing_field | {"description":"Query argument interval is required, but not found","name":"missing_field","sta
+  timeframe=4h     400 missing_field | {"description":"Query argument interval is required, but not found","name":"missing_field","sta
+  timeframe=1d     400 missing_field | {"description":"Query argument interval is required, but not found","name":"missing_field","sta
+  timeframe=3m     400 missing_field | {"description":"Query argument interval is required, but not found","name":"missing_field","sta
+  timeframe=1s     400 missing_field | {"description":"Query argument interval is required, but not found","name":"missing_field","sta
+  timeframe=1w     400 missing_field | {"description":"Query argument interval is required, but not found","name":"missing_field","sta
+  timeframe=bogus  400 missing_field | {"description":"Query argument interval is required, but not found","name":"missing_field","sta
+
+=== 3. WS ohlcv channel (documented: symbols + timeframe, snapshot then updates) ===
+    sent 1 message(s) at t+294ms
+    t+   461ms -/error            {"type":"error","errorName":"subscription_failed","message":"subscription failed to channel: ohlcv"}
+    ws error event
+    CLOSED at t+12183ms code=1006 reason=""
+
+=== 4. WS trades channel ===
+    sent 1 message(s) at t+576ms
+    t+   740ms trades/subscribed  {"channel":"trades","type":"subscribed","symbols":["SOMI:USDso"]}
+    t+   748ms trades/snapshot    {"channel":"trades","type":"snapshot","symbol":"SOMI:USDso","trades":null}
+    ws error event
+    CLOSED at t+12181ms code=1006 reason=""
+
+=== 5. WS ohlcv with a bad timeframe (docs constraint list: 1m/5m/15m/1h/4h/1d) ===
+    sent 1 message(s) at t+815ms
+    t+   983ms -/error            {"type":"error","errorName":"subscription_failed","message":"subscription failed to channel: ohlcv"}
+    CLOSED at t+8186ms code=1005 reason=""
+
+=== 6. WS ohlcv with timeframe omitted ===
+    sent 1 message(s) at t+897ms
+    t+  1076ms -/error            {"type":"error","errorName":"subscription_failed","message":"subscription failed to channel: ohlcv"}
+    ws error event
+    CLOSED at t+8182ms code=1006 reason=""
+
+=== 7. idle timeout: connect, send NOTHING, wait (docs: closes after 60s inactivity) ===
+    sent 0 message(s) at t+453ms
+    ws error event
+    CLOSED at t+60453ms code=1006 reason=""
+   measured close: t+60453ms
+
+=== 8. unsubscribe contract (docs: params is required on unsubscribe) ===
+    sent 2 message(s) at t+816ms
+    t+   984ms orderbook/subscribed {"channel":"orderbook","type":"subscribed","symbols":["SOMI:USDso"]}
+    t+   984ms orderbook/snapshot {"channel":"orderbook","type":"snapshot","symbol":"SOMI:USDso","bids":[{"price":"0.1647","quantity":"1687.85"},{"price": bids=15
+    t+   984ms -/error            {"type":"error","errorName":"unsubscribe_failed","message":"unsubscription failed"}
+    CLOSED at t+9182ms code=1005 reason=""

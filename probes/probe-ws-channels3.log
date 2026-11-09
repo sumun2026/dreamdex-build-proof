@@ -1,0 +1,28 @@
+=== 1. does any surface emit invalid_interval? ===
+  REST, unsupported interval:
+    interval=3m     400 name=invalid_param header=invalid_param
+    interval=1w     400 name=invalid_param header=invalid_param
+    interval=bogus  400 name=invalid_param header=invalid_param
+  WS ohlcv, unsupported timeframe (correct singular shape):
+    timeframe=3m     -> subscription_failed | {"type":"error","errorName":"subscription_failed","message":"subscription failed to channel: ohlcv"}
+    timeframe=1w     -> subscription_failed | {"type":"error","errorName":"subscription_failed","message":"subscription failed to channel: ohlcv"}
+    timeframe=(omitted) -> subscription_failed | {"type":"error","errorName":"subscription_failed","message":"subscription failed to channel: ohlcv"}
+
+=== 2. ohlcv snapshot arrival per documented timeframe (30s window each) ===
+  1m   WS snapshot=YES candles=21 | REST candles=21 | msgs: subscribed@795ms,snapshot@807ms
+  5m   WS snapshot=YES candles=53 | REST candles=52 | msgs: subscribed@812ms,snapshot@826ms
+  15m  WS snapshot=YES candles=75 | REST candles=75 | msgs: subscribed@831ms,snapshot@849ms
+  1h   WS snapshot=YES candles=100 | REST candles=100 | msgs: subscribed@503ms,snapshot@515ms
+  4h   WS snapshot=YES candles=100 | REST candles=100 | msgs: subscribed@452ms,snapshot@704ms
+  1d   WS snapshot=YES candles=100 | REST candles=94 | msgs: subscribed@469ms,snapshot@487ms
+
+=== 3. repeat the two worst cases once more (is it stable, or slow?) ===
+  1d attempt 1: snapshot=YES(100) first3=subscribed,snapshot waited=474ms
+  1d attempt 2: snapshot=YES(100) first3=subscribed,snapshot waited=897ms
+  4h attempt 1: snapshot=YES(100) first3=subscribed,snapshot waited=822ms
+  4h attempt 2: snapshot=YES(100) first3=subscribed,snapshot waited=842ms
+
+=== 4. is `interval` documented for REST /candles anywhere on the trading page? ===
+  trading doc page: 172 lines, 2 mentions of interval|candles|timeframe
+    85: These endpoints provide access to trade history, ticker snapshots, and candlestick data for a given market. The
+    103: GET /v0/markets/{symbol}/candles

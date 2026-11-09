@@ -1,0 +1,63 @@
+=== A. ohlcv with the documented singular `symbol` + timeframe ===
+  timeframe=1m
+      sent 1 @ t+888ms
+      t+  1057ms {"channel":"ohlcv","type":"subscribed","symbol":"SOMI:USDso","timeframe":"1m"}
+      t+  1213ms {"channel":"ohlcv","type":"snapshot","symbol":"SOMI:USDso","timeframe":"1m","candles":[{"timestamp":1794075300000,"open":"0.1674", || candles=21 FIRST={"timestamp":1794075300000,"open":"0.1674","high":"0.1674","low":"0.1674","close":"0.1674","volume":"890"} LAST={"timestamp":1794080220000
+      CLOSE t+9250ms code=1005
+  timeframe=1h
+      sent 1 @ t+812ms
+      t+   980ms {"channel":"ohlcv","type":"subscribed","symbol":"SOMI:USDso","timeframe":"1h"}
+      t+  1011ms {"channel":"ohlcv","type":"snapshot","symbol":"SOMI:USDso","timeframe":"1h","candles":[{"timestamp":1793721600000,"open":"0.1626", || candles=100 FIRST={"timestamp":1793721600000,"open":"0.1626","high":"0.1627","low":"0.1615","close":"0.1627","volume":"5757.68"} LAST={"timestamp":17940780
+      CLOSE t+9183ms code=1005
+  timeframe=1d
+      sent 1 @ t+789ms
+      t+   957ms {"channel":"ohlcv","type":"subscribed","symbol":"SOMI:USDso","timeframe":"1d"}
+      CLOSE t+9171ms code=1005
+
+=== B. contrast: ohlcv with the PLURAL `symbols` form (as orderbook uses) ===
+    sent 1 @ t+875ms
+    t+  1042ms {"type":"error","errorName":"subscription_failed","message":"subscription failed to channel: ohlcv"}
+    CLOSE t+6183ms code=1005
+
+=== C. trades with the documented `limit` (earlier: no limit -> trades:null) ===
+    sent 1 @ t+826ms
+    t+   992ms {"channel":"trades","type":"subscribed","symbols":["SOMI:USDso"]}
+    t+   999ms {"channel":"trades","type":"snapshot","symbol":"SOMI:USDso","trades":null} || trades=null
+    CLOSE t+9182ms code=1006
+
+   --- same subscribe WITHOUT limit ---
+    sent 1 @ t+439ms
+    t+   611ms {"channel":"trades","type":"subscribed","symbols":["SOMI:USDso"]}
+    t+   617ms {"channel":"trades","type":"snapshot","symbol":"SOMI:USDso","trades":null} || trades=null
+
+=== D. unsubscribe with params (required per docs) ===
+    sent 2 @ t+436ms
+    t+   599ms {"channel":"orderbook","type":"subscribed","symbols":["SOMI:USDso"]}
+    t+   599ms {"channel":"orderbook","type":"snapshot","symbol":"SOMI:USDso","bids":[{"price":"0.1648","quantity":"1687.85"},{"price":"0.1647","
+    t+   599ms {"channel":"orderbook","type":"unsubscribed","symbols":["SOMI:USDso"]}
+    CLOSE t+8172ms code=1006
+
+=== E. REST /candles interval set (WS docs constrain timeframe to 1m/5m/15m/1h/4h/1d) ===
+  interval=1m     200 - candles=21 | 
+  interval=5m     200 - candles=52 | 
+  interval=15m    200 - candles=75 | 
+  interval=1h     200 - candles=100 | 
+  interval=4h     200 - candles=100 | 
+  interval=1d     200 - candles=94 | 
+  interval=3m     400 invalid_param candles=- | {"description":"parameter \"interval\" in query has an error: value is not one o
+  interval=1w     400 invalid_param candles=- | {"description":"parameter \"interval\" in query has an error: value is not one o
+  interval=1s     400 invalid_param candles=- | {"description":"parameter \"interval\" in query has an error: value is not one o
+  interval=bogus  400 invalid_param candles=- | {"description":"parameter \"interval\" in query has an error: value is not one o
+  interval=1M     400 invalid_param candles=- | {"description":"parameter \"interval\" in query has an error: value is not one o
+  interval=60     400 invalid_param candles=- | {"description":"parameter \"interval\" in query has an error: value is not one o
+
+=== F. do the two surfaces agree on candles? WS ohlcv snapshot vs REST /candles ===
+  WS snapshot candles : 21
+  REST candles        : 21
+  WS   LAST: 1794080220000|0.1649/0.1649/0.1647/0.1647/885.47
+  REST LAST: 1794080220000|0.1649/0.1649/0.1647/0.1647/885.47
+  WS   FIRST: 1794075300000|0.1674/0.1674/0.1674/0.1674/890
+  REST FIRST: 1794075300000|0.1674/0.1674/0.1674/0.1674/890
+
+=== G. does WS document `interval` anywhere, or only REST? (field-name split) ===
+  both names supplied -> 200 candles=21

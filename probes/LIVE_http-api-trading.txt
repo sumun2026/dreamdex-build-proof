@@ -1,0 +1,172 @@
+dreamDEX
+:root,[data-theme-ground="dark"]{--theme-page:#0e1217;--theme-surface:#14191f;--theme-raised:#1c222a;--theme-overlay:#2a3035;--theme-heading:#ffffff;--theme-body:#c9d1d9;--theme-muted:#8d98a3;--theme-subtle:#8d98a3;--theme-accent:#5b55c8;--theme-accentText:#a9a5ee;--theme-action:#5b55c8;--theme-actionHover:#6b65d1;--theme-actionDisabled:#2d2e5a;--theme-buy:#00fa89;--theme-buyHover:#51ffb0;--theme-sell:#dc0b4a;--theme-sellText:#ec658d;--theme-warning:#f4a116;--theme-border:#1b2026;--theme-edge:#2d323a;--theme-inverse:#0e1217;--theme-actionSoft:#5b55c866;--theme-washSuccess:#00fa890d;--theme-washSuccessStrong:#00fa8933;--theme-washError:#dc0b4a0d;--theme-washErrorStrong:#dc0b4a33;--theme-washAlert:#feac230d;--theme-rowTint:#2a30354d;--theme-scrim:#14191f80;--theme-glow:#6b65d1;--theme-ctaGlow:#6b65d14d;--theme-accentTint:#4943aa1a;--theme-gradientStart:#2d2a62;--theme-gradientEnd:#2d2a6200;--theme-onAction:#ffffff;--theme-onAccent:#ffffff;--theme-onAccentText:#0e1217;--theme-onGradient:#a9a5ee;--theme-onBuy:#0e1217;--theme-onSell:#ffffff;--theme-onWarning:#0e1217;--theme-onSellText:#0e1217}:root[data-theme="classic"]{--theme-page:#0e1217;--theme-surface:#0e1217;--theme-raised:#14191f;--theme-overlay:#2a3035;--theme-heading:#ffffff;--theme-body:#c9d1d9;--theme-muted:#8d98a3;--theme-subtle:#8d98a3;--theme-accent:#5b55c8;--theme-accentText:#a9a5ee;--theme-action:#5b55c8;--theme-actionHover:#6b65d1;--theme-actionDisabled:#2d2e5a;--theme-buy:#00fa89;--theme-buyHover:#51ffb0;--theme-sell:#dc0b4a;--theme-sellText:#ec658d;--theme-warning:#f4a116;--theme-border:#1b2026;--theme-edge:#2d323a;--theme-inverse:#0e1217;--theme-actionSoft:#5b55c866;--theme-washSuccess:#00fa890d;--theme-washSuccessStrong:#00fa8933;--theme-washError:#dc0b4a0d;--theme-washErrorStrong:#dc0b4a33;--theme-washAlert:#feac230d;--theme-rowTint:#2a30354d;--theme-scrim:#14191f80;--theme-glow:#6b65d1;--theme-ctaGlow:#6b65d14d;--theme-accentTint:#4943aa1a;--theme-gradientStart:#2d2a62;--theme-gradientEnd:#2d2a6200;--theme-onAction:#ffffff;--theme-onAccent:#ffffff;--theme-onAccentText:#0e1217;--theme-onGradient:#a9a5ee;--theme-onBuy:#0e1217;--theme-onSell:#ffffff;--theme-onWarning:#0e1217;--theme-onSellText:#0e1217}:root[data-theme="nebula"]{--theme-page:#131625;--theme-surface:#171b2c;--theme-raised:#22273a;--theme-overlay:#2f3444;--theme-heading:#ffffff;--theme-body:#c9d1d9;--theme-muted:#8d98a3;--theme-subtle:#8d98a3;--theme-accent:#5b55c8;--theme-accentText:#a9a5ee;--theme-action:#5b55c8;--theme-actionHover:#6b65d1;--theme-actionDisabled:#2d2e5a;--theme-buy:#00fa89;--theme-buyHover:#51ffb0;--theme-sell:#dc0b4a;--theme-sellText:#ec658d;--theme-warning:#f4a116;--theme-border:#26293c;--theme-edge:#35374a;--theme-inverse:#0e1217;--theme-actionSoft:#5b55c866;--theme-washSuccess:#00fa890d;--theme-washSuccessStrong:#00fa8933;--theme-washError:#dc0b4a0d;--theme-washErrorStrong:#dc0b4a33;--theme-washAlert:#feac230d;--theme-rowTint:#2a30354d;--theme-scrim:#14191f80;--theme-glow:#6b65d1;--theme-ctaGlow:#6b65d14d;--theme-accentTint:#4943aa1a;--theme-gradientStart:#2d2a62;--theme-gradientEnd:#2d2a6200;--theme-onAction:#ffffff;--theme-onAccent:#ffffff;--theme-onAccentText:#0e1217;--theme-onGradient:#a9a5ee;--theme-onBuy:#0e1217;--theme-onSell:#ffffff;--theme-onWarning:#0e1217;--theme-onSellText:#0e1217}:root[data-theme="light"]{--theme-page:#c1c7ce;--theme-surface:#e6ebf0;--theme-raised:#f2f5f8;--theme-overlay:#ffffff;--theme-heading:#0e1217;--theme-body:#1e242b;--theme-muted:#404852;--theme-subtle:#404852;--theme-accent:#454099;--theme-accentText:#343493;--theme-action:#514cae;--theme-actionHover:#5e59b2;--theme-actionDisabled:#636191;--theme-buy:#1c634d;--theme-buyHover:#28725b;--theme-sell:#dc0b4a;--theme-sellText:#af0c3d;--theme-warning:#f4a116;--theme-border:#b1b7bf;--theme-edge:#d0d7e6;--theme-inverse:#ffffff;--theme-actionSoft:#514cae33;--theme-washSuccess:#2b9c780d;--theme-washSuccessStrong:#2b9c7833;--theme-washError:#af0c3d0d;--theme-washErrorStrong:#af0c3d33;--theme-washAlert:#feac230d;--theme-rowTint:#c1c7ce4d;--theme-scrim:#f2f5f880;--theme-glow:#6b65d100;--theme-ctaGlow:#6b65d100;--theme-accentTint:#4943aa1a;--theme-gradientStart:#5b55c8;--theme-gradientEnd:#ffffff00;--theme-onAction:#ffffff;--theme-onAccent:#ffffff;--theme-onAccentText:#ffffff;--theme-onGradient:#ffffff;--theme-onBuy:#ffffff;--theme-onSell:#ffffff;--theme-onWarning:#0e1217;--theme-onSellText:#ffffff}
+Search docs…
+⌘K
+Welcome
+Introduction
+Why dreamDEX?
+Making Your First Deposit
+Quick Start
+Roadmap
+Trading
+Overview
+Common
+Fees
+Collateral Yield Algorithm
+Order Types
+Link a Bot
+Spot
+Overview
+Simple Swap
+Operators &amp; Session Keys
+Stop Orders
+Event Contracts
+Overview
+Settlement &amp; Voids
+FAQ
+Perps (Testnet)
+Overview
+Margin &amp; Liquidations
+Funding
+Orders
+Lend
+Overview
+Developers
+Overview
+Contracts
+Overview
+Addresses
+Specifications
+Functions
+Events
+Types
+Errors
+SpotRouter
+HTTP API
+Overview
+Error Handling
+Authentication
+Market Data
+Trading
+Builder Fees
+Vault
+Wallets
+Portfolio
+Libraries
+Overview
+CCXT
+Event Contracts
+Overview
+Recipes
+Market Structure &amp; Lifecycle
+Contracts &amp; Addresses
+Gotchas
+Perps (Testnet)
+Overview
+WebSocket API
+Overview
+Real-Time Feed
+Operations
+Errors
+Security
+Risks
+Audits
+Support
+Overview
+Get help
+FAQ
+Overview
+My funds are not showing
+My order was rejected
+My stop did not work
+My Event Contract settled against me
+Fees and gas
+I got scammed or hacked
+Trading
+These endpoints provide access to trade history, ticker snapshots, and candlestick data for a given market. The
+Order Management
+section covers preparing, querying, reducing, and cancelling orders, and
+Trade History
+returns your executed fills.
+Note that the prepare-order endpoint returns an
+unsigned transaction
+— the client must sign and broadcast it to the Somnia network. See the
+Quick Start
+guide for a full walkthrough.
+Taker orders need a crossing limit price.
+A marketable (IOC/FOK) order only fills against resting liquidity priced at or through its limit: a buy must price at or above the best ask, a sell at or below the best bid. A price of
+0
+(raw
+priceRaw = 0
+) never crosses the book and produces no fill. Set a limit that crosses, bounded by your slippage tolerance.
+GET /v0/markets/{symbol}/trades
+GET /v0/markets/{symbol}/tickers
+GET /v0/markets/{symbol}/candles
+Order Management
+POST /v0/markets/{symbol}/orders
+GET /v0/markets/{symbol}/orders/{id}
+A resting order can be shrunk without cancelling it.
+newQuantityRemaining
+must be at or below the current remaining quantity, at least
+minQuantity
+, and a multiple of
+lotSize
+; the order's
+fullQuantity
+and
+quantityRemaining
+both decrease by the difference. Like placing an order, this returns an unsigned transaction to sign and broadcast.
+PATCH /v0/markets/{symbol}/orders/{id}/reduce
+DELETE /v0/markets/{symbol}/orders/{id}
+GET /v0/markets/{symbol}/orders
+To fetch open and historical orders across several markets in one call, use the unscoped endpoint below. Omit
+symbols
+to cover every available market; unknown symbols are silently skipped.
+GET /v0/orders
+Trade History
+These endpoints return executed fills for the authenticated account. They include trades where the account was either the taker or the maker, returned newest-first. The market-scoped
+trades/mine
+and the unscoped
+/v0/trades
+(which spans several markets in one call and tags each trade with its symbol) operate on the caller's own account. The
+trades/{address}
+variant returns fills for any wallet and is restricted to bearer tokens carrying the
+trades:read_any
+scope.
+GET /v0/markets/{symbol}/trades/mine
+GET /v0/trades
+GET /v0/markets/{symbol}/trades/{address}
+© 2026 - DreamDEX, S.A.
+Terms
+Privacy policy
+Support
+Trade
+Events
+Support
+Trade
+Events
+Support
+Trade
+Events
+Lend
+dreamBot
+Support
+Trade
+Events
+Lend
+dreamBot
+Support
+Connect
+Trade
+Events
+Lend
+dreamBot
+Support
+Trade
+Events
+Lend
+dreamBot
+Support
+Connect
+Perps Arena kicks off October 12. $15,000 in prizes. No deposit required. Terms apply.
+Join Perps Arena.

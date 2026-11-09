@@ -1,0 +1,38 @@
+
+===== mainnet  https://api.dreamdex.io/v0
+  interval=1m    200  error-name=null  {"candles":[{"close":"0.1663","high":"0.1663","low":"0.1663","open":"0.1663","timestamp":1794078720000,"volume":"354.81"},{"close":"0.1659","high":"0.166","low":"0.1659",
+  interval=5m    200  error-name=null  {"candles":[{"close":"0.1681","high":"0.1681","low":"0.1681","open":"0.1681","timestamp":1794054900000,"volume":"6785.19"},{"close":"0.1695","high":"0.1701","low":"0.1682
+  interval=15m   200  error-name=null  {"candles":[{"close":"0.1685","high":"0.1685","low":"0.1685","open":"0.1685","timestamp":1793995200000,"volume":"1687.85"},{"close":"0.1676","high":"0.1678","low":"0.1675
+  interval=1h    200  error-name=null  {"candles":[{"close":"0.1622","high":"0.1632","low":"0.1622","open":"0.1628","timestamp":1793725200000,"volume":"12637.83"},{"close":"0.1638","high":"0.1645","low":"0.163
+  interval=4h    200  error-name=null  {"candles":[{"close":"0.1768","high":"0.1786","low":"0.1751","open":"0.1784","timestamp":1792656000000,"volume":"8973.87"},{"close":"0.1733","high":"0.1782","low":"0.1718
+  interval=1d    200  error-name=null  {"candles":[{"close":"0.0887","high":"0.0916","low":"0.0883","open":"0.0894","timestamp":1785974400000,"volume":"1152641.11"},{"close":"0.0887","high":"0.0898","low":"0.0
+  interval=3m    400  error-name=invalid_param  {"description":"parameter \"interval\" in query has an error: value is not one of the allowed values [\"1m\",\"5m\",\"15m\",\"1h\",\"4h\",\"1d\"]\nSchema:\n  {\n    \"enu
+  interval=1w    400  error-name=invalid_param  {"description":"parameter \"interval\" in query has an error: value is not one of the allowed values [\"1m\",\"5m\",\"15m\",\"1h\",\"4h\",\"1d\"]\nSchema:\n  {\n    \"enu
+  interval=1s    400  error-name=invalid_param  {"description":"parameter \"interval\" in query has an error: value is not one of the allowed values [\"1m\",\"5m\",\"15m\",\"1h\",\"4h\",\"1d\"]\nSchema:\n  {\n    \"enu
+  interval=bogus 400  error-name=invalid_param  {"description":"parameter \"interval\" in query has an error: value is not one of the allowed values [\"1m\",\"5m\",\"15m\",\"1h\",\"4h\",\"1d\"]\nSchema:\n  {\n    \"enu
+  interval=1M    400  error-name=invalid_param  {"description":"parameter \"interval\" in query has an error: value is not one of the allowed values [\"1m\",\"5m\",\"15m\",\"1h\",\"4h\",\"1d\"]\nSchema:\n  {\n    \"enu
+  interval=60    400  error-name=invalid_param  {"description":"parameter \"interval\" in query has an error: value is not one of the allowed values [\"1m\",\"5m\",\"15m\",\"1h\",\"4h\",\"1d\"]\nSchema:\n  {\n    \"enu
+  interval=<absent> 400  error-name=missing_field  {"description":"Query argument interval is required, but not found","name":"missing_field","status":400}
+
+  ws timeframe=3m    -> {"type":"error","errorName":"subscription_failed","message":"subscription failed to channel: ohlcv"}
+  ws timeframe=1w    -> {"type":"error","errorName":"subscription_failed","message":"subscription failed to channel: ohlcv"}
+  ws timeframe=null  -> {"type":"error","errorName":"subscription_failed","message":"subscription failed to channel: ohlcv"}
+
+===== shannon  https://stg.api.dreamdex.io/v0
+  interval=1m    200  error-name=null  {"candles":[{"close":"0.1663","high":"0.1664","low":"0.1662","open":"0.1662","timestamp":1794078360000,"volume":"150"},{"close":"0.1663","high":"0.1663","low":"0.1663","o
+  interval=5m    200  error-name=null  {"candles":[{"close":"0.1672","high":"0.1674","low":"0.1672","open":"0.1674","timestamp":1794054600000,"volume":"675"},{"close":"0.1679","high":"0.1679","low":"0.167","op
+  interval=15m   200  error-name=null  {"candles":[{"close":"0.1681","high":"0.1685","low":"0.1678","open":"0.168","timestamp":1793995200000,"volume":"2100"},{"close":"0.1679","high":"0.1683","low":"0.1676","o
+  interval=1h    200  error-name=null  {"candles":[{"close":"0.1623","high":"0.1632","low":"0.162","open":"0.1626","timestamp":1793725200000,"volume":"8820.49"},{"close":"0.1632","high":"0.1645","low":"0.1622"
+  interval=4h    200  error-name=null  {"candles":[{"close":"0.1767","high":"0.1786","low":"0.1751","open":"0.1784","timestamp":1792656000000,"volume":"35481"},{"close":"0.1733","high":"0.1781","low":"0.1719",
+  interval=1d    200  error-name=null  {"candles":[{"close":"0.1912","high":"0.1929","low":"0.1849","open":"0.1852","timestamp":1792454400000,"volume":"161000"},{"close":"0.1881","high":"0.1926","low":"0.1879"
+  interval=3m    400  error-name=invalid_param  {"description":"parameter \"interval\" in query has an error: value is not one of the allowed values [\"1m\",\"5m\",\"15m\",\"1h\",\"4h\",\"1d\"]\nSchema:\n  {\n    \"enu
+  interval=1w    400  error-name=invalid_param  {"description":"parameter \"interval\" in query has an error: value is not one of the allowed values [\"1m\",\"5m\",\"15m\",\"1h\",\"4h\",\"1d\"]\nSchema:\n  {\n    \"enu
+  interval=1s    400  error-name=invalid_param  {"description":"parameter \"interval\" in query has an error: value is not one of the allowed values [\"1m\",\"5m\",\"15m\",\"1h\",\"4h\",\"1d\"]\nSchema:\n  {\n    \"enu
+  interval=bogus 400  error-name=invalid_param  {"description":"parameter \"interval\" in query has an error: value is not one of the allowed values [\"1m\",\"5m\",\"15m\",\"1h\",\"4h\",\"1d\"]\nSchema:\n  {\n    \"enu
+  interval=1M    400  error-name=invalid_param  {"description":"parameter \"interval\" in query has an error: value is not one of the allowed values [\"1m\",\"5m\",\"15m\",\"1h\",\"4h\",\"1d\"]\nSchema:\n  {\n    \"enu
+  interval=60    400  error-name=invalid_param  {"description":"parameter \"interval\" in query has an error: value is not one of the allowed values [\"1m\",\"5m\",\"15m\",\"1h\",\"4h\",\"1d\"]\nSchema:\n  {\n    \"enu
+  interval=<absent> 400  error-name=missing_field  {"description":"Query argument interval is required, but not found","name":"missing_field","status":400}
+
+  ws timeframe=3m    -> {"type":"error","errorName":"subscription_failed","message":"subscription failed to channel: ohlcv"}
+  ws timeframe=1w    -> {"type":"error","errorName":"subscription_failed","message":"subscription failed to channel: ohlcv"}
+  ws timeframe=null  -> {"type":"error","errorName":"subscription_failed","message":"subscription failed to channel: ohlcv"}

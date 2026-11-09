@@ -1,0 +1,54 @@
+
+########## timeframe 1d
+  round 1: WS n=100 step=1440m  REST n=94 step=1440m
+            WS  span 2026-07-31T00:00 -> 2026-11-07T00:00
+            REST span 2026-08-06T00:00 -> 2026-11-07T00:00
+            onlyInWS=6 onlyInREST=0
+              e.g. 1785456000000|0.0843/0.086/0.0833/0.085/3962472.89
+            shared bars with different OHLCV: 1 of 94
+              WS 1785974400000|0.0906/0.0929/0.0883/0.0887/2988352.82  vs REST 1785974400000|0.0894/0.0916/0.0883/0.0887/1152641.11
+  round 2: WS n=100 step=1440m  REST n=94 step=1440m
+            WS  span 2026-07-31T00:00 -> 2026-11-07T00:00
+            REST span 2026-08-06T00:00 -> 2026-11-07T00:00
+            onlyInWS=6 onlyInREST=0
+              e.g. 1785456000000|0.0843/0.086/0.0833/0.085/3962472.89
+            shared bars with different OHLCV: 1 of 94
+              WS 1785974400000|0.0906/0.0929/0.0883/0.0887/2988352.82  vs REST 1785974400000|0.0894/0.0916/0.0883/0.0887/1152641.11
+
+########## timeframe 5m
+  round 1: WS n=52 step=10m  REST n=51 step=5m
+            WS  span 2026-11-07T11:35 -> 2026-11-07T19:35
+            REST span 2026-11-07T11:45 -> 2026-11-07T19:35
+            onlyInWS=1 onlyInREST=0
+              e.g. 1794051300000|0.1685/0.1685/0.1685/0.1685/1
+            shared bars with different OHLCV: 0 of 51
+  round 2: WS n=52 step=10m  REST n=51 step=5m
+            WS  span 2026-11-07T11:35 -> 2026-11-07T19:35
+            REST span 2026-11-07T11:45 -> 2026-11-07T19:35
+            onlyInWS=1 onlyInREST=0
+              e.g. 1794051300000|0.1685/0.1685/0.1685/0.1685/1
+            shared bars with different OHLCV: 0 of 51
+
+########## timeframe 4h
+  round 1: WS n=100 step=240m  REST n=100 step=240m
+            WS  span 2026-10-22T04:00 -> 2026-11-07T16:00
+            REST span 2026-10-22T04:00 -> 2026-11-07T16:00
+            onlyInWS=0 onlyInREST=0
+            shared bars with different OHLCV: 0 of 100
+  round 2: WS n=100 step=240m  REST n=100 step=240m
+            WS  span 2026-10-22T04:00 -> 2026-11-07T16:00
+            REST span 2026-10-22T04:00 -> 2026-11-07T16:00
+            onlyInWS=0 onlyInREST=0
+            shared bars with different OHLCV: 0 of 100
+
+########## timeframe 1m
+  round 1: WS n=20 step=1m  REST n=20 step=1m
+            WS  span 2026-11-07T18:20 -> 2026-11-07T19:37
+            REST span 2026-11-07T18:20 -> 2026-11-07T19:37
+            onlyInWS=0 onlyInREST=0
+            shared bars with different OHLCV: 0 of 20
+  round 2: WS n=20 step=1m  REST n=20 step=1m
+            WS  span 2026-11-07T18:20 -> 2026-11-07T19:37
+            REST span 2026-11-07T18:20 -> 2026-11-07T19:37
+            onlyInWS=0 onlyInREST=0
+            shared bars with different OHLCV: 0 of 20

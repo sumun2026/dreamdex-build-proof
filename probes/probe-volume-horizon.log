@@ -1,0 +1,18 @@
+asked window vs served window (until is always 40min ago to satisfy the 30-min rule)
+
+asked   1d  2026-11-06T19:19 .. 2026-11-07T19:19 -> 200 name=- honored=YES served 1.00d baseVol=588619.43
+asked   5d  2026-11-02T19:19 .. 2026-11-07T19:19 -> 200 name=- honored=YES served 5.00d baseVol=2890398.02
+asked  20d  2026-10-18T19:19 .. 2026-11-07T19:19 -> 200 name=- honored=YES served 20.00d baseVol=33043870.68
+asked  30d  2026-10-08T19:19 .. 2026-11-07T19:19 -> 200 name=- honored=YES served 30.00d baseVol=38844140.38
+asked  40d  2026-09-28T19:19 .. 2026-11-07T19:19 -> 200 name=- honored=YES served 40.00d baseVol=45158254.61
+file:///D:/imag/bounty-scan/dreamdex/probe-volume-horizon.mjs:9
+const iso = (ms) => new Date(Number(ms)).toISOString().slice(0, 16);
+                                         ^
+
+RangeError: Invalid time value
+    at Date.toISOString (<anonymous>)
+    at iso (file:///D:/imag/bounty-scan/dreamdex/probe-volume-horizon.mjs:9:42)
+    at file:///D:/imag/bounty-scan/dreamdex/probe-volume-horizon.mjs:26:74
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+
+Node.js v26.8.1

@@ -1,0 +1,20 @@
+REST /candles?interval=1d -> 94 bars; WS ohlcv snapshot -> 100 bars
+checking each REST daily bar's volume against REST /volume for that UTC day
+
+bars compared: 93 | volume mismatches: 1 | not comparable: 1
+
+  2026-08-06  (ts=1785974400000)
+     /candles  volume=1152641.11  open=0.0894 high=0.0916 low=0.0883 close=0.0887
+     /volume   volume=2988352.82      <- same vendor, same UTC day
+     WS ohlcv  volume=2988352.82  open=0.0906 high=0.0929 low=0.0883 close=0.0887
+     ratio /volume vs /candles = 2.593x
+
+  /volume refused for 1 bar(s): 2026-11-07=400/invalid_param ...
+  oldest unchecked: 2026-11-07, newest unchecked: 2026-11-07
+
+=== position of the mismatching bar inside the REST series ===
+  2026-08-06 is index 0 of 94 (oldest=2026-08-06, newest=2026-11-07)
+
+=== the two days either side of the mismatch, for context ===
+  2026-08-06 /candles=1152641.11  /volume=2988352.82
+  2026-08-07 /candles=1612914.18  /volume=1612914.18

@@ -1,0 +1,1899 @@
+dreamDEX
+Search docs…
+⌘K
+Welcome
+Introduction
+Why dreamDEX?
+Making Your First Deposit
+Quick Start
+Roadmap
+Trading
+Overview
+Common
+Fees
+Collateral Yield Algorithm
+Order Types
+Link a Bot
+Spot
+Overview
+Simple Swap
+Operators & Session Keys
+Stop Orders
+Event Contracts
+Overview
+Settlement & Voids
+FAQ
+Perps (Testnet)
+Overview
+Margin & Liquidations
+Funding
+Orders
+Lend
+Overview
+Developers
+Overview
+Contracts
+Overview
+Addresses
+Specifications
+Functions
+Events
+Types
+Errors
+SpotRouter
+HTTP API
+Overview
+Error Handling
+Authentication
+Market Data
+Trading
+Builder Fees
+Vault
+Wallets
+Portfolio
+Libraries
+Overview
+CCXT
+Event Contracts
+Overview
+Recipes
+Market Structure & Lifecycle
+Contracts & Addresses
+Gotchas
+Perps (Testnet)
+Overview
+WebSocket API
+Overview
+Real-Time Feed
+Operations
+Errors
+Security
+Risks
+Audits
+Support
+Overview
+Get help
+FAQ
+Overview
+My funds are not showing
+My order was rejected
+My stop did not work
+My Event Contract settled against me
+Fees and gas
+I got scammed or hacked
+Real-Time Feed
+Subscription Model
+Use
+subscribe
+and
+unsubscribe
+operations to manage channel subscriptions:
+json
+{
+"operation"
+:
+"subscribe"
+,
+"channel"
+:
+"orderbook"
+,
+"params"
+:
+{
+"symbols"
+:
+[
+"SOMI:USDso"
+]
+}
+}
+{
+"operation"
+:
+"unsubscribe"
+,
+"channel"
+:
+"orderbook"
+,
+"params"
+:
+{
+"symbols"
+:
+[
+"SOMI:USDso"
+]
+}
+}
+Heartbeat
+Send
+{"operation": "ping"}
+to receive
+{"operation": "pong"}
+.
+Connections close after 60 seconds of inactivity. Send a ping at least every 30 seconds to avoid being disconnected. The ping doubles as a liveness check: if you do not receive a
+pong
+within your own timeout, treat the connection as dead and reconnect (see
+Reconnecting and resuming
+). See the
+Errors
+page for the full list of close codes and connection-level failures.
+Reconnecting and resuming
+The feed does
+not
+provide a sequence number or resume cursor. There is no way to replay messages missed while disconnected, and no gapless snapshot-to-live handoff - so treat every reconnect as a cold start:
+Reconnect with
+exponential backoff
+(a
+1001 Going Away
+close or a
+shutdown
+message means the server is cycling - back off and retry).
+Re-subscribe
+to every channel you need. Market-data channels (
+orderbook
+,
+ohlcv
+,
+trades
+) reply with a fresh
+snapshot
+, so your local state is rebuilt from scratch - discard any pre-disconnect state rather than merging.
+Re-fetch authoritative state over REST
+for anything the stream cannot resnapshot. In particular, after any disconnect re-read open orders and balances via the HTTP API rather than assuming your in-memory view survived.
+Because there is no seqNum, a silent mid-stream gap is indistinguishable from a quiet market. Bots that must not miss an update should periodically reconcile against REST (order state, balances) as a backstop, and reconnect on any missed heartbeat.
+Order Lifecycle Tracking
+There is
+no account-wide order or fills channel.
+The
+order
+channel is
+per-
+orderId
+- you subscribe to one specific order and receive its lifecycle events. Subscribing once and waiting for fills across all your orders is not supported; track each order you place.
+The tracking flow for a single order:
+Prepare and submit
+the order (HTTP API or on-chain), then extract its
+orderId
+from the
+OrderPlaced
+event / prepared-order response.
+Subscribe
+to the
+order
+channel with that
+orderId
+:
+json
+{
+"operation"
+:
+"subscribe"
+,
+"channel"
+:
+"order"
+,
+"params"
+:
+{
+"symbol"
+:
+"SOMI:USDso"
+,
+"orderId"
+:
+"0xYourOrderId"
+}
+}
+Consume
+order:update
+events
+until the order reaches a terminal
+order.status
+of
+filled
+or
+cancelled
+(an expired order surfaces as
+cancelled
+). See the
+order:update
+message schema below for the full status set.
+Unsubscribe
+once terminal to free the subscription.
+Own-fill attribution.
+The public
+trades
+channel carries
+market-wide
+executed trades and does
+not
+attribute fills to your account - do not use it to detect your own fills. Use the per-order
+order
+channel for maker/resting orders. For high-churn IOC/taker loops, subscribing and unsubscribing per order adds latency; reconciling wallet/vault balances (or reading the transaction receipt logs) is usually the better pattern there - see
+Choosing between REST and WebSocket
+.
+Subscribing to an unsupported channel name returns an
+unknown_channel
+error; valid channel names with bad params return
+subscription_failed
+. See
+Errors
+.
+Table of Contents
+Reconnecting and resuming
+Order Lifecycle Tracking
+Connection
+Close Codes
+Client Messages
+Server Messages
+Data Types
+Connection
+Endpoint
+:
+Environment
+Public feed
+Mainnet (Somnia)
+wss://api.dreamdex.io/v0/ws/public
+Testnet (Somnia Shannon)
+wss://stg.api.dreamdex.io/v0/ws/public
+Close Codes
+The server uses standard and application-specific WebSocket close codes. See the
+Errors
+page for close codes, connection-level failures, and application-level error messages.
+Client Messages
+Messages sent by the client to the server.
+ping
+- Heartbeat ping
+Receives a ping message from the client. The server immediately responds
+with a pong message. Clients should send pings periodically to prevent
+the connection from timing out after 60 seconds of inactivity.
+Request Format
+Field
+Type
+Description
+Constraints
+Required
+operation
+string
+-
+"ping"
+required
+Response
+The server responds with:
+Pong
+: Server heartbeat response
+subscribe
+- Subscribe to data feed
+Receives a subscription request from the client. The server validates the
+request parameters and, if successful, begins streaming the requested data.
+The client receives a subscribed confirmation followed by an initial snapshot,
+then incremental updates as data changes.
+Request Format
+Field
+Type
+Description
+Constraints
+Required
+operation
+string
+-
+"subscribe"
+required
+channel
+string
+-
+"orderbook"
+,
+"ohlcv"
+,
+"trades"
+,
+"order"
+required
+params
+object
+Channel-specific parameters
+-
+required
+Examples
+Subscribe to order book
+json
+{
+"operation"
+:
+"subscribe"
+,
+"channel"
+:
+"orderbook"
+,
+"params"
+:
+{
+"symbols"
+:
+[
+"SOMI:USDso"
+,
+"WBTC:USDso"
+]
+}
+}
+Subscribe to OHLCV
+json
+{
+"operation"
+:
+"subscribe"
+,
+"channel"
+:
+"ohlcv"
+,
+"params"
+:
+{
+"symbol"
+:
+"SOMI:USDso"
+,
+"timeframe"
+:
+"1m"
+}
+}
+Subscribe to trades
+json
+{
+"operation"
+:
+"subscribe"
+,
+"channel"
+:
+"trades"
+,
+"params"
+:
+{
+"symbols"
+:
+[
+"SOMI:USDso"
+]
+,
+"limit"
+:
+100
+}
+}
+Subscribe to order updates
+json
+{
+"operation"
+:
+"subscribe"
+,
+"channel"
+:
+"order"
+,
+"params"
+:
+{
+"orderId"
+:
+"0x1234567890abcdef"
+}
+}
+Response
+The server responds with one of:
+Subscribed
+: Subscription successful
+Error
+: Request failed
+unsubscribe
+- Unsubscribe from data feed
+Receives an unsubscription request from the client. The server stops sending
+updates for the specified data feed and confirms with an unsubscribed message.
+Request Format
+Field
+Type
+Description
+Constraints
+Required
+operation
+string
+-
+"unsubscribe"
+required
+channel
+string
+-
+"orderbook"
+,
+"ohlcv"
+,
+"trades"
+,
+"order"
+required
+params
+object
+-
+-
+required
+Response
+The server responds with one of:
+Unsubscribed
+: Unsubscription successful
+Error
+: Request failed
+Server Messages
+Messages sent by the server to connected clients.
+pong
+- Heartbeat pong
+Sends a pong response to the client after receiving a ping. This confirms
+the connection is alive and resets the inactivity timeout.
+Message Format
+Field
+Type
+Description
+Constraints
+Required
+operation
+string
+-
+"pong"
+required
+subscribed
+- Subscription confirmed
+Confirms a successful subscription. Sent immediately after processing a valid
+subscribe request. The confirmation echoes back the subscription parameters
+so the client can verify which data feed was activated.
+Message Format
+Field
+Type
+Description
+Constraints
+Required
+channel
+string
+-
+-
+required
+type
+string
+-
+"subscribed"
+required
+symbols
+array
+-
+-
+optional
+symbol
+string
+-
+-
+optional
+timeframe
+string
+-
+-
+optional
+orderId
+string
+-
+-
+optional
+Examples
+Order book subscription confirmed
+json
+{
+"channel"
+:
+"orderbook"
+,
+"type"
+:
+"subscribed"
+,
+"symbols"
+:
+[
+"SOMI:USDso"
+]
+}
+unsubscribed
+- Unsubscription confirmed
+Confirms a successful unsubscription. After this message, the client will
+no longer receive updates for the specified data feed.
+Message Format
+Field
+Type
+Description
+Constraints
+Required
+channel
+string
+-
+-
+required
+type
+string
+-
+"unsubscribed"
+required
+symbols
+array
+-
+-
+optional
+symbol
+string
+-
+-
+optional
+timeframe
+string
+-
+-
+optional
+orderId
+string
+-
+-
+optional
+error:error
+- Error response
+Sends an error message when a client request cannot be processed. This may
+occur due to invalid parameters, unknown channels, or server-side issues.
+The message field contains a human-readable error description.
+Message Format
+Field
+Type
+Description
+Constraints
+Required
+channel
+string
+-
+"error"
+required
+type
+string
+-
+"error"
+required
+message
+string
+-
+-
+required
+orderbook:snapshot
+- Order book snapshot
+Sends the complete order book state immediately after a client subscribes
+to the orderbook channel. Contains aggregated price levels with total quantity
+at each price. Bids are sorted by price descending (highest first), asks are
+sorted ascending (lowest first). Clients should use this to initialize their
+local order book state before applying incremental updates.
+Message Format
+Field
+Type
+Description
+Constraints
+Required
+channel
+string
+-
+"orderbook"
+required
+type
+string
+-
+"snapshot"
+required
+symbol
+string
+-
+-
+required
+bids
+array
+-
+-
+required
+bids[].price
+string
+Price as decimal string for precision (e.g., "1.23456789")
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+bids[].quantity
+string
+Quantity as decimal string. "0" means remove the level.
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+asks
+array
+-
+-
+required
+asks[].price
+string
+Price as decimal string for precision (e.g., "1.23456789")
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+asks[].quantity
+string
+Quantity as decimal string. "0" means remove the level.
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+timestamp
+integer
+-
+format: int64
+required
+Examples
+SOMI:USDso order book with 2 bid and 2 ask levels
+json
+{
+"channel"
+:
+"orderbook"
+,
+"type"
+:
+"snapshot"
+,
+"symbol"
+:
+"SOMI:USDso"
+,
+"bids"
+:
+[
+{
+"price"
+:
+"1.24"
+,
+"quantity"
+:
+"1500"
+}
+,
+{
+"price"
+:
+"1.23"
+,
+"quantity"
+:
+"3200"
+}
+]
+,
+"asks"
+:
+[
+{
+"price"
+:
+"1.26"
+,
+"quantity"
+:
+"800"
+}
+,
+{
+"price"
+:
+"1.27"
+,
+"quantity"
+:
+"2100"
+}
+]
+,
+"timestamp"
+:
+1765534169841
+}
+orderbook:update
+- Order book update
+Sends incremental order book changes as they occur. Each update contains
+changed price levels in the
+bids
+and/or
+asks
+arrays. A quantity of zero
+means the level was removed from the book.
+Apply updates by replacing the quantity at each price level, or removing the
+level if the quantity is zero.
+Message Format
+Field
+Type
+Description
+Constraints
+Required
+channel
+string
+-
+"orderbook"
+required
+type
+string
+-
+"update"
+required
+symbol
+string
+-
+-
+required
+bids
+array
+-
+-
+optional
+bids[].price
+string
+Price as decimal string for precision (e.g., "1.23456789")
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+bids[].quantity
+string
+Quantity as decimal string. "0" means remove the level.
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+asks
+array
+-
+-
+optional
+asks[].price
+string
+Price as decimal string for precision (e.g., "1.23456789")
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+asks[].quantity
+string
+Quantity as decimal string. "0" means remove the level.
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+timestamp
+integer
+-
+format: int64
+required
+Examples
+New bid and removed ask
+json
+{
+"channel"
+:
+"orderbook"
+,
+"type"
+:
+"update"
+,
+"symbol"
+:
+"SOMI:USDso"
+,
+"bids"
+:
+[
+{
+"price"
+:
+"1.25"
+,
+"quantity"
+:
+"500"
+}
+]
+,
+"asks"
+:
+[
+{
+"price"
+:
+"1.26"
+,
+"quantity"
+:
+"0"
+}
+]
+,
+"timestamp"
+:
+1765534170000
+}
+ohlcv:snapshot
+- OHLCV candle history
+Sends historical candlestick data immediately after a client subscribes
+to the ohlcv channel. Contains recent candles for the requested symbol
+and timeframe. Clients should use this to populate charts before
+receiving live updates.
+Message Format
+Field
+Type
+Description
+Constraints
+Required
+channel
+string
+-
+"ohlcv"
+required
+type
+string
+-
+"snapshot"
+required
+symbol
+string
+-
+-
+required
+timeframe
+string
+-
+"1m"
+,
+"5m"
+,
+"15m"
+,
+"1h"
+,
+"4h"
+,
+"1d"
+required
+candles
+array
+-
+-
+required
+candles[].timestamp
+integer
+-
+format: int64
+required
+candles[].open
+string
+Opening price as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+candles[].high
+string
+Highest price as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+candles[].low
+string
+Lowest price as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+candles[].close
+string
+Closing price as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+candles[].volume
+string
+Trading volume as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+Examples
+Two 1-minute candles for SOMI:USDso
+json
+{
+"channel"
+:
+"ohlcv"
+,
+"type"
+:
+"snapshot"
+,
+"symbol"
+:
+"SOMI:USDso"
+,
+"timeframe"
+:
+"1m"
+,
+"candles"
+:
+[
+{
+"timestamp"
+:
+1765534080000
+,
+"open"
+:
+"1.24"
+,
+"high"
+:
+"1.27"
+,
+"low"
+:
+"1.23"
+,
+"close"
+:
+"1.26"
+,
+"volume"
+:
+"15000.5"
+}
+,
+{
+"timestamp"
+:
+1765534140000
+,
+"open"
+:
+"1.26"
+,
+"high"
+:
+"1.28"
+,
+"low"
+:
+"1.25"
+,
+"close"
+:
+"1.27"
+,
+"volume"
+:
+"12300"
+}
+]
+}
+ohlcv:update
+- OHLCV candle update
+Sends a new or updated candlestick as trading occurs. If the candle
+timestamp matches an existing candle, the client should replace it
+(the candle is still forming). A new timestamp indicates the previous
+candle closed and a new one started.
+Message Format
+Field
+Type
+Description
+Constraints
+Required
+channel
+string
+-
+"ohlcv"
+required
+type
+string
+-
+"update"
+required
+symbol
+string
+-
+-
+required
+timeframe
+string
+-
+-
+required
+candle
+object
+-
+-
+required
+candle.timestamp
+integer
+-
+format: int64
+required
+candle.open
+string
+Opening price as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+candle.high
+string
+Highest price as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+candle.low
+string
+Lowest price as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+candle.close
+string
+Closing price as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+candle.volume
+string
+Trading volume as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+Examples
+Updated 1-minute candle
+json
+{
+"channel"
+:
+"ohlcv"
+,
+"type"
+:
+"update"
+,
+"symbol"
+:
+"SOMI:USDso"
+,
+"timeframe"
+:
+"1m"
+,
+"candle"
+:
+{
+"timestamp"
+:
+1765534200000
+,
+"open"
+:
+"1.27"
+,
+"high"
+:
+"1.29"
+,
+"low"
+:
+"1.26"
+,
+"close"
+:
+"1.28"
+,
+"volume"
+:
+"8500"
+}
+}
+trades:snapshot
+- Recent trades history
+Sends recent trade history immediately after a client subscribes to the
+trades channel. Contains the most recent trades up to the requested limit
+(default 100). Trades are ordered by timestamp descending (newest first).
+Message Format
+Field
+Type
+Description
+Constraints
+Required
+channel
+string
+-
+"trades"
+required
+type
+string
+-
+"snapshot"
+required
+symbol
+string
+-
+-
+required
+trades
+array
+-
+-
+required
+trades[].id
+string
+-
+-
+required
+trades[].price
+string
+Trade price as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+trades[].quantity
+string
+Trade quantity as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+trades[].side
+string
+-
+"buy"
+,
+"sell"
+required
+trades[].timestamp
+integer
+-
+format: int64
+required
+Examples
+Two recent trades for SOMI:USDso
+json
+{
+"channel"
+:
+"trades"
+,
+"type"
+:
+"snapshot"
+,
+"symbol"
+:
+"SOMI:USDso"
+,
+"trades"
+:
+[
+{
+"id"
+:
+"trade001"
+,
+"price"
+:
+"1.25"
+,
+"quantity"
+:
+"100"
+,
+"side"
+:
+"buy"
+,
+"timestamp"
+:
+1765534169000
+}
+,
+{
+"id"
+:
+"trade002"
+,
+"price"
+:
+"1.26"
+,
+"quantity"
+:
+"50"
+,
+"side"
+:
+"sell"
+,
+"timestamp"
+:
+1765534168000
+}
+]
+}
+trades:update
+- New trade executed
+Sends a trade notification when an order is filled. Each update contains
+a single trade with its price, quantity, and aggressor side. Clients
+receive this in real-time as trades execute on the exchange.
+Message Format
+Field
+Type
+Description
+Constraints
+Required
+channel
+string
+-
+"trades"
+required
+type
+string
+-
+"update"
+required
+symbol
+string
+-
+-
+required
+trade
+object
+-
+-
+required
+trade.id
+string
+-
+-
+required
+trade.price
+string
+Trade price as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+trade.quantity
+string
+Trade quantity as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+trade.side
+string
+-
+"buy"
+,
+"sell"
+required
+trade.timestamp
+integer
+-
+format: int64
+required
+Examples
+Buy order filled
+json
+{
+"channel"
+:
+"trades"
+,
+"type"
+:
+"update"
+,
+"symbol"
+:
+"SOMI:USDso"
+,
+"trade"
+:
+{
+"id"
+:
+"trade003"
+,
+"price"
+:
+"1.27"
+,
+"quantity"
+:
+"75"
+,
+"side"
+:
+"buy"
+,
+"timestamp"
+:
+1765534170000
+}
+}
+order:snapshot
+- Order state snapshot
+Sends the current state of a specific order immediately after a client
+subscribes to the order channel. Contains full order details including
+filled quantity and current status. Use this to initialize order tracking
+before receiving status updates.
+Message Format
+Field
+Type
+Description
+Constraints
+Required
+channel
+string
+-
+"order"
+required
+type
+string
+-
+"snapshot"
+required
+order
+object
+-
+-
+required
+order.id
+string
+Unique order identifier
+-
+required
+order.market
+string
+Market symbol (e.g., SOMI:USDso)
+-
+required
+order.side
+string
+-
+"buy"
+,
+"sell"
+required
+order.price
+string
+Limit price as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+order.quantity
+string
+Original order quantity as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+order.filled
+string
+Amount filled so far as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+order.status
+string
+Current order status
+"open"
+,
+"partial"
+,
+"filled"
+,
+"cancelled"
+required
+order.createdAt
+integer
+Unix timestamp (ms) when order was created
+format: int64
+required
+order.updatedAt
+integer
+Unix timestamp (ms) when order was last updated
+format: int64
+required
+Examples
+Partially filled buy order
+json
+{
+"channel"
+:
+"order"
+,
+"type"
+:
+"snapshot"
+,
+"order"
+:
+{
+"id"
+:
+"0x1234567890abcdef"
+,
+"market"
+:
+"SOMI:USDso"
+,
+"side"
+:
+"buy"
+,
+"price"
+:
+"1.25"
+,
+"quantity"
+:
+"1000"
+,
+"filled"
+:
+"250"
+,
+"status"
+:
+"partial"
+,
+"createdAt"
+:
+1765534160000
+,
+"updatedAt"
+:
+1765534169000
+}
+}
+order:update
+- Order status changed
+Sends an order status update when the order state changes. This includes
+partial fills, complete fills, and cancellations. The update contains
+the complete current order state, not just the changes.
+Message Format
+Field
+Type
+Description
+Constraints
+Required
+channel
+string
+-
+"order"
+required
+type
+string
+-
+"update"
+required
+order
+object
+-
+-
+required
+order.id
+string
+Unique order identifier
+-
+required
+order.market
+string
+Market symbol (e.g., SOMI:USDso)
+-
+required
+order.side
+string
+-
+"buy"
+,
+"sell"
+required
+order.price
+string
+Limit price as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+order.quantity
+string
+Original order quantity as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+order.filled
+string
+Amount filled so far as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+order.status
+string
+Current order status
+"open"
+,
+"partial"
+,
+"filled"
+,
+"cancelled"
+required
+order.createdAt
+integer
+Unix timestamp (ms) when order was created
+format: int64
+required
+order.updatedAt
+integer
+Unix timestamp (ms) when order was last updated
+format: int64
+required
+Examples
+Order partially filled
+json
+{
+"channel"
+:
+"order"
+,
+"type"
+:
+"update"
+,
+"order"
+:
+{
+"id"
+:
+"0x1234567890abcdef"
+,
+"market"
+:
+"SOMI:USDso"
+,
+"side"
+:
+"buy"
+,
+"price"
+:
+"1.25"
+,
+"quantity"
+:
+"1000"
+,
+"filled"
+:
+"500"
+,
+"status"
+:
+"partial"
+,
+"createdAt"
+:
+1765534160000
+,
+"updatedAt"
+:
+1765534175000
+}
+}
+Order fully filled
+json
+{
+"channel"
+:
+"order"
+,
+"type"
+:
+"update"
+,
+"order"
+:
+{
+"id"
+:
+"0x1234567890abcdef"
+,
+"market"
+:
+"SOMI:USDso"
+,
+"side"
+:
+"buy"
+,
+"price"
+:
+"1.25"
+,
+"quantity"
+:
+"1000"
+,
+"filled"
+:
+"1000"
+,
+"status"
+:
+"filled"
+,
+"createdAt"
+:
+1765534160000
+,
+"updatedAt"
+:
+1765534180000
+}
+}
+shutdown
+- Server shutting down
+Notifies all connected clients that the server is shutting down gracefully.
+Clients should close their connections and reconnect to a different server
+or retry after a delay. This message is broadcast to all clients before
+the server terminates connections.
+Message Format
+Field
+Type
+Description
+Constraints
+Required
+type
+string
+-
+"shutdown"
+required
+message
+string
+Human-readable shutdown reason
+-
+required
+Examples
+Graceful shutdown notification
+json
+{
+"type"
+:
+"shutdown"
+,
+"message"
+:
+"server shutting down"
+}
+Data Types
+Reusable schema definitions.
+PriceLevel
+Field
+Type
+Description
+Constraints
+Required
+price
+string
+Price as decimal string for precision (e.g., "1.23456789")
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+quantity
+string
+Aggregate quantity at this price level as decimal string. "0" means the level was removed.
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+Candle
+Field
+Type
+Description
+Constraints
+Required
+timestamp
+integer
+-
+format: int64
+required
+open
+string
+Opening price as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+high
+string
+Highest price as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+low
+string
+Lowest price as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+close
+string
+Closing price as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+volume
+string
+Trading volume as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+Trade
+Field
+Type
+Description
+Constraints
+Required
+id
+string
+-
+-
+required
+price
+string
+Trade price as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+quantity
+string
+Trade quantity as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+side
+string
+-
+"buy"
+,
+"sell"
+required
+timestamp
+integer
+-
+format: int64
+required
+Order
+Field
+Type
+Description
+Constraints
+Required
+id
+string
+Unique order identifier
+-
+required
+market
+string
+Market symbol (e.g., SOMI:USDso)
+-
+required
+side
+string
+-
+"buy"
+,
+"sell"
+required
+price
+string
+Limit price as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+quantity
+string
+Original order quantity as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+filled
+string
+Amount filled so far as decimal string
+pattern:
+^[0-9]+(\.[0-9]+)?$
+required
+status
+string
+Current order status
+"open"
+,
+"partial"
+,
+"filled"
+,
+"cancelled"
+required
+createdAt
+integer
+Unix timestamp (ms) when order was created
+format: int64
+required
+updatedAt
+integer
+Unix timestamp (ms) when order was last updated
+format: int64
+required
+© 2026 - DreamDEX, S.A.
+Terms
+Privacy policy
+Support
+Trade
+Events
+Support
+Trade
+Events
+Support
+Perps Arena kicks off October 12. $15,000 in prizes. No deposit required. Terms apply.
+Join Perps Arena.
+Trade
+Events
+Lend
+dreamBot
+Support
+Trade
+Events
+Lend
+dreamBot
+Support
+Connect
+Trade
+Events
+Lend
+dreamBot
+Support
+Trade
+Events
+Lend
+dreamBot
+Support
+Connect

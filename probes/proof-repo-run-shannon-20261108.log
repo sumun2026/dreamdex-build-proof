@@ -1,0 +1,58 @@
+
+################ shannon — Somnia Shannon testnet (chainId 50312)
+################ REST https://stg.api.dreamdex.io/v0
+
+--- market universe  [OK]  both surfaces answered
+      REST /v0/markets      : 3 markets, kinds {"spot":3}
+      SDK  fetchMarkets()   : 49 markets, types {"binary":22,"swap":24,"spot":3}
+      PERP markets          : SDK/indexer 24 | REST 0 (REST documents a spot-only {symbol} universe)
+      filtered REST probe   : /markets?kind=perp -> 0 rows | /markets?type=perp -> 3 rows (unknown params are ignored, not rejected)
+
+--- identifier mapping  [OK]  3/3 REST markets resolvable through the SDK
+      SOMI:USDso       -> CCXT SOMI/USDso       -> SDK match (type=spot)
+      WBTC:USDso       -> CCXT WBTC/USDso       -> SDK match (type=spot)
+      WETH:USDso       -> CCXT WETH/USDso       -> SDK match (type=spot)
+      SDK symbols with a :SETTLE suffix: 24 of 49 (CCXT linear-perp notation, e.g. SWSOL/USDso:USDso — not a defect)
+      round-trip: SDK-only symbols are NOT valid REST ids — see shannon: 3 REST vs 49 SDK
+
+--- order book agreement  [OK]  REST and SDK books match
+      REST /orderbooks?symbols=SOMI:USDso -> 200
+        best bid {"price":"0.1647","quantity":"519.5"} / best ask {"price":"0.1648","quantity":"455.5"}
+      SDK fetchOrderBook("SOMI/USDso") -> ok
+        best bid {"price":"0.1647","quantity":"519.5"} / best ask {"price":"0.1648","quantity":"455.5"}
+        verdict: same top of book on both surfaces (levels normalised: REST objects vs SDK [price, quantity] pairs)
+
+--- volume window unit  [OK]  documented behaviour of /volume
+      milliseconds  since=1793995521000   -> 200 baseVolume 202255.31
+      seconds       since=1793995521      -> 200 baseVolume 0
+      control /tickers (unambiguous, same instant) -> 200 {"symbols":[{"close":"0.1647","high":"0.1696","lastTradeAt":1794083716129,"low":"0.1645","
+      The HTTP API docs never state the unit for since/until; a seconds caller gets HTTP 200 and a zero, not an error.
+
+--- error contract  [OK]  compared handler errors vs router errors
+      documented per-market orderbook path 404 | ct=text/plain; charset=utf-8 | Error-Name=- | 404 page not found
+      documented orderbooks path form    404 | ct=text/plain; charset=utf-8 | Error-Name=- | 404 page not found
+      unknown market id                  404 | ct=application/json | Error-Name=market_not_found | {"description":"market not found: NOPE:USDso","name":"market_not_found
+      unknown route                      404 | ct=text/plain; charset=utf-8 | Error-Name=- | 404 page not found
+      The docs state ALL error responses use the JSON {status,name,description} contract plus an Error-Name header.
+
+--- candle cross-surface  [CHECK]  2/19 daily bars disagree across surfaces
+      GET /markets/SOMI%3AUSDso/candles?interval=1d          -> 200 19 bars (2026-10-20 .. 2026-11-07)
+        + &limit=400                  -> 200 19 bars — limit is accepted and ignored, so the window cannot be widened
+      WS ohlcv timeframe=1d (singular symbol param) -> 100 bars (2026-07-31 ..)
+      daily bars compared 19 | in REST only (older than the WS window) 0 | disagreeing 2
+        2026-10-20  /candles volume=161000 open=0.1852 high=0.1929
+                   ws ohlcv  volume=214600 open=0.1877 high=0.1929
+                   /volume   200 baseVolume=214600 — the third surface agrees with the WS feed, not /candles
+        2026-11-07  /candles volume=175170.3 open=0.167 high=0.1696
+                   ws ohlcv  volume=174695.3 open=0.167 high=0.1696
+                   /volume   400 baseVolume=? — the third surface agrees with neither surface exactly
+        a disagreement here is a data-correctness conflict between first-party surfaces, not a client bug: the same symbol, the same UTC day, the same units.
+
+--- websocket feed  [OK]  ping/getMarkets/subscribe all served
+      connection wss://stg.api.dreamdex.io/v0/ws/public
+      << {"operation":"pong","serverTimestamp":1794083733428}
+      << {"id":2,"status":200,"payload":{"markets":[{"base":"0x28f34DeFd2b4CB48d9eE6d89f2Be4Bc601694c00","baseDecimals":18,"contract":"0x259fD6559214dd5aD37523
+      << {"channel":"orderbook","type":"subscribed","symbols":["SOMI:USDso"]}
+      required-field probe: id omitted by client -> response carries id=0, status=200 (operations page marks id Required: yes)
+
+audited: shannon  (read-only; no credentials used)

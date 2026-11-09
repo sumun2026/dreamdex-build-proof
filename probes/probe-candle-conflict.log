@@ -1,0 +1,30 @@
+=== WS vs REST, every shared daily bar, field by field (run 1) ===
+  shared bars: 94 of 94 REST | mismatching: 1
+  2026-08-06 (1785974400000) differs in: open, high, volume
+      open    REST=0.0894         WS=0.0906
+      high    REST=0.0916         WS=0.0929
+      volume  REST=1152641.11     WS=2988352.82
+
+=== determinism: re-fetch both surfaces 2 more times ===
+  pass 1: REST n=94 WS n=100 mismatching days=1 [2026-08-06]
+  pass 2: REST n=94 WS n=100 mismatching days=1 [2026-08-06]
+
+=== third opinion for 2026-08-06: REST /volume over exactly that UTC day ===
+  GET /volume?since=1785974400000&until=1786060800000 -> 200
+  {"baseVolume":"4505015.98","baseVolumeRaw":"4505015980000000000000000","quoteVolume":"769914.65554","quoteVolumeRaw":"769914655540000000000000","since":1793474823359,"symbol":"SOMI:USDso","until":1794079623359} 
+  candle volume says: REST=1152641.11  WS=2988352.82
+
+=== fourth opinion: count actual trades in that UTC day from /trades ===
+  /trades -> 200 rows=100 sum(base qty)=0.00
+  first row keys: amount,cost,id,price,side,symbol,timestamp,txHash
+  (first/last trade times: 2026-11-07T14:38:35.013Z .. 2026-11-07T19:37:55.687Z)
+
+=== the 6 extra WS-only days (older than REST's window) ===
+  WS-only bars: 6
+      2026-07-31 o=0.0843 h=0.086 l=0.0833 c=0.085 v=3962472.89
+      2026-08-01 o=0.085 h=0.0864 l=0.0827 c=0.0835 v=2914090.58
+      2026-08-02 o=0.0835 h=0.0853 l=0.083 c=0.0837 v=3103328.89
+      2026-08-03 o=0.0837 h=0.0869 l=0.0819 c=0.0847 v=2886497.47
+      2026-08-04 o=0.0845 h=0.0856 l=0.0834 c=0.0836 v=2827010.06
+      2026-08-05 o=0.0835 h=0.0907 l=0.0831 c=0.0906 v=3160488.76
+  REST with ?limit=100 -> 400 candles=-
