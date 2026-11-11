@@ -1,0 +1,56 @@
+
+################ mainnet — Somnia mainnet (chainId 5031)
+################ REST https://api.dreamdex.io/v0
+
+--- market universe  [OK]  both surfaces answered
+      REST /v0/markets      : 4 markets, kinds {"spot":4}
+      SDK  fetchMarkets()   : 10 markets, types {"binary":6,"spot":4}
+      PERP markets          : SDK/indexer 0 | REST 0 (REST documents a spot-only {symbol} universe)
+      filtered REST probe   : /markets?kind=perp -> 0 rows | /markets?type=perp -> 4 rows (unknown params are ignored, not rejected)
+
+--- identifier mapping  [OK]  4/4 REST markets resolvable through the SDK
+      WBTC:USDso       -> CCXT WBTC/USDso       -> SDK match (type=spot)
+      WETH:USDso       -> CCXT WETH/USDso       -> SDK match (type=spot)
+      SOMI:USDso       -> CCXT SOMI/USDso       -> SDK match (type=spot)
+      USDC.e:USDso     -> CCXT USDC.e/USDso     -> SDK match (type=spot)
+      SDK symbols with a :SETTLE suffix: 0 of 10 (CCXT linear-perp notation, e.g. n/a on this env — not a defect)
+      round-trip: SDK-only symbols are NOT valid REST ids — see mainnet: 4 REST vs 10 SDK
+
+--- order book agreement  [OK]  REST and SDK books match
+      REST /orderbooks?symbols=SOMI:USDso -> 200
+        best bid {"price":"0.1645","quantity":"1686.72"} / best ask {"price":"0.1647","quantity":"3998.91"}
+      SDK fetchOrderBook("SOMI/USDso") -> ok
+        best bid {"price":"0.1645","quantity":"1686.72"} / best ask {"price":"0.1647","quantity":"3998.91"}
+        verdict: same top of book on both surfaces (levels normalised: REST objects vs SDK [price, quantity] pairs)
+
+--- volume window unit  [OK]  documented behaviour of /volume
+      milliseconds  since=1794329084000   -> 200 baseVolume 433172.33
+      seconds       since=1794329084      -> 200 baseVolume 0
+      control /tickers (unambiguous, same instant) -> 200 {"symbols":[{"close":"0.1647","high":"0.1659","lastTradeAt":1794417258669,"low":"0.1599","
+      The HTTP API docs never state the unit for since/until; a seconds caller gets HTTP 200 and a zero, not an error.
+
+--- error contract  [OK]  compared handler errors vs router errors
+      documented per-market orderbook path 404 | ct=text/plain; charset=utf-8 | Error-Name=- | 404 page not found
+      documented orderbooks path form    404 | ct=text/plain; charset=utf-8 | Error-Name=- | 404 page not found
+      unknown market id                  404 | ct=application/json | Error-Name=market_not_found | {"description":"market not found: NOPE:USDso","name":"market_not_found
+      unknown route                      404 | ct=text/plain; charset=utf-8 | Error-Name=- | 404 page not found
+      The docs state ALL error responses use the JSON {status,name,description} contract plus an Error-Name header.
+
+--- candle cross-surface  [CHECK]  1/98 daily bars disagree across surfaces
+      GET /markets/SOMI%3AUSDso/candles?interval=1d          -> 200 98 bars (2026-08-06 .. 2026-11-11)
+        + &limit=400                  -> 200 98 bars — limit is accepted and ignored, so the window cannot be widened
+      WS ohlcv timeframe=1d (singular symbol param) -> 100 bars (2026-08-04 ..)
+      daily bars compared 98 | in REST only (older than the WS window) 0 | disagreeing 1
+        2026-08-06  /candles volume=1152641.11 open=0.0894 high=0.0916
+                   ws ohlcv  volume=2988352.82 open=0.0906 high=0.0929
+                   /volume   200 baseVolume=2988352.82 — the third surface agrees with the WS feed, not /candles
+        a disagreement here is a data-correctness conflict between first-party surfaces, not a client bug: the same symbol, the same UTC day, the same units.
+
+--- websocket feed  [OK]  ping/getMarkets/subscribe all served
+      connection wss://api.dreamdex.io/v0/ws/public
+      << {"operation":"pong","serverTimestamp":1794417290229}
+      << {"id":2,"status":200,"payload":{"markets":[{"base":"0x28f34DeFd2b4CB48d9eE6d89f2Be4Bc601694c00","baseDecimals":18,"contract":"0x035De7403eac6872787779
+      << {"channel":"orderbook","type":"subscribed","symbols":["SOMI:USDso"]}
+      required-field probe: id omitted by client -> response carries id=0, status=200 (operations page marks id Required: yes)
+
+audited: mainnet  (read-only; no credentials used)

@@ -1,0 +1,9 @@
+shannon — 3 REST markets, interval=1d, WS wss://stg.api.dreamdex.io/v0/ws/public
+
+SOMI:USDso   rest=23 ws=100 oldest=2026-10-20 | disagreeing bars=2
+   index 0 of 23  2026-10-20  /candles vol=161000 open=0.1852 | ws vol=214600 open=0.1877 | /volume 214600
+   index 22 of 23  2026-11-11  /candles vol=152375 open=0.164 | ws vol=152400 open=0.164 | /volume {"description":"until must be at least 30 minutes in the pas
+WBTC:USDso   rest=23 ws=100 oldest=2026-10-20 | disagreeing bars=1
+   index 0 of 23  2026-10-20  /candles vol=0.93554 open=81535.3 | ws vol=1.24767 open=81862 | /volume 1.24767
+WETH:USDso   rest=23 ws=88 oldest=2026-10-20 | disagreeing bars=1
+   index 0 of 23  2026-10-20  /candles vol=8.4592 open=2390.19 | ws vol=11.197 open=2405.47 | /volume 11.197

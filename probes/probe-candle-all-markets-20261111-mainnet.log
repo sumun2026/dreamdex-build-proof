@@ -1,0 +1,10 @@
+mainnet — 4 REST markets, interval=1d, WS wss://api.dreamdex.io/v0/ws/public
+
+SOMI:USDso   rest=98 ws=100 oldest=2026-08-06 | disagreeing bars=1
+   index 0 of 98  2026-08-06  /candles vol=1152641.11 open=0.0894 | ws vol=2988352.82 open=0.0906 | /volume 2988352.82
+USDC.e:USDso rest=97 ws=100 oldest=2026-08-06 | disagreeing bars=1
+   index 0 of 97  2026-08-06  /candles vol=1486.63 open=1.0002 | ws vol=4625.52 open=1.0002 | /volume 4625.52
+WBTC:USDso   rest=98 ws=100 oldest=2026-08-06 | disagreeing bars=1
+   index 0 of 98  2026-08-06  /candles vol=8.37105 open=64602.2 | ws vol=17.22636 open=64631 | /volume 17.22636
+WETH:USDso   rest=98 ws=100 oldest=2026-08-06 | disagreeing bars=1
+   index 0 of 98  2026-08-06  /candles vol=31.8 open=1906.53 | ws vol=58.1861 open=1906.16 | /volume 58.1861

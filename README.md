@@ -62,12 +62,16 @@ On live data this row exits as `[CHECK]` — it disagrees with itself across sur
 check exists to detect. Sample, mainnet:
 
 ```
---- candle cross-surface  [CHECK]  1/94 daily bars disagree across surfaces
-      GET /markets/SOMI%3AUSDso/candles?interval=1d          -> 200 94 bars (2026-08-06 .. 2026-11-07)
-        + &limit=400                  -> 200 94 bars — limit is accepted and ignored, so the window cannot be widened
-      WS ohlcv timeframe=1d (singular symbol param) -> 100 bars (2026-07-31 ..)
-      daily bars compared 94 | in REST only (older than the WS window) 0 | disagreeing 1
+--- candle cross-surface  [CHECK]  1/98 daily bars disagree across surfaces
+      GET /markets/SOMI%3AUSDso/candles?interval=1d          -> 200 98 bars (2026-08-06 .. 2026-11-11)
+        + &limit=400                  -> 200 98 bars — limit is accepted and ignored, so the window cannot be widened
+      WS ohlcv timeframe=1d (singular symbol param) -> 100 bars (2026-08-04 ..)
+      daily bars compared 98 | in REST only (older than the WS window) 0 | disagreeing 1
 ```
+
+(That sample is from `node src/index.js --env mainnet` on 2026-11-11, kept in
+`probes/auditor-run-20261111-mainnet.log`; the earlier 2026-11-08 run of the same command read 94 bars and
+the same single disagreeing day. Bar counts grow as the window ages — the disagreeing day does not move.)
 
 That is the auditor working, not a broken build: same symbol, same UTC day, same units, three first-party
 surfaces. The check is deliberately **informational** — it prints the disagreement and stops there, and

@@ -38,6 +38,15 @@ Individual probes for each item are in `probes/` (`.mjs` scripts with their capt
 output alongside). Item 06 in particular is deterministic across repeated runs and reproducible from the
 public REST and WebSocket endpoints without an account.
 
+## Re-verification, 2026-11-11
+
+Item 06 was swept again on 2026-11-11, three days after it was first measured
+(`probes/probe-candle-all-markets-20261111-mainnet.log`, `...-shannon.log`,
+`probes/probe-candle-scan-20261111.log`, `probes/ws-window-shape-20261111.log`,
+`probes/auditor-run-20261111-mainnet.log`). Same seven markets, same `index 0`, byte-identical volumes and
+opens, while every series grew at the tail (mainnet SOMI 94 → 98 daily bars, Shannon 19 → 23). The disputed
+day does not scroll away.
+
 ## Environments checked
 
 Mainnet (chain 5031) and the testnet environment named on the bounty page, both cross-checked.
