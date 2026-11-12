@@ -1,0 +1,16 @@
+404   13994 B  final=https://www.dreamdex.io/docs/developers/http-api/market-data  https://dreamdex.io/docs/developers/http-api/market-data
+404   13994 B  final=https://www.dreamdex.io/docs/developers/http-api/market-data  https://www.dreamdex.io/docs/developers/http-api/market-data
+200  273888 B  final=https://app.dreamdex.io/docs/developers/http-api/market-data  https://app.dreamdex.io/docs/developers/http-api/market-data
+        HIT silently skipped
+        HIT rather than a 4xx
+        HIT # Wrong
+200  197002 B  final=https://app.dreamdex.io/docs/http-api/market-data  https://app.dreamdex.io/docs/http-api/market-data
+404   13994 B  final=https://www.dreamdex.io/docs/http-api/market-data  https://dreamdex.io/docs/http-api/market-data
+200  273802 B  final=https://app.dreamdex.io/docs/developers/http-api/market-data  https://docs.dreamdex.io/developers/http-api/market-data
+        HIT silently skipped
+        HIT rather than a 4xx
+        HIT # Wrong
+404      19 B  final=https://api.dreamdex.io/docs  https://api.dreamdex.io/docs
+404   13994 B  final=https://www.dreamdex.io/docs/developers/http-api/trading  https://dreamdex.io/docs/developers/http-api/trading
+200  252956 B  final=https://app.dreamdex.io/docs/developers/http-api/trading  https://app.dreamdex.io/docs/developers/http-api/trading
+        HIT silently skipped

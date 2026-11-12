@@ -1,0 +1,20 @@
+
+######## https://stg.api.dreamdex.io/v0  re-check 2026-11-12T01:44:34.291Z
+  A seconds 1d  -> 200 {"baseVolume":"0","baseVolumeRaw":"0","quoteVolume":"0","quoteVolumeRaw":"0","since":1794361474,"symbol":"SOMI:USDso","until":1794446074}
+
+  B millis  1d  -> 200 {"baseVolume":"208525","baseVolumeRaw":"208525000000000000000000","quoteVolume":"33817.8425","quoteVolumeRaw":"33817842500000000000000","since":179436
+  C control     -> 200 {"symbols":[{"close":"0.1597","high":"0.1656","lastTradeAt":1794447875525,"low":"0.1572","open":"0.1639","symbol":"SOMI:USDso","timestamp":17944478770
+  D since=0     -> 200 {"baseVolume":"0","baseVolumeRaw":"0","quoteVolume":"0","quoteVolumeRaw":"0","since":0,"symbol":"SOMI:USDso","until":86400}
+
+  echo: A since=1794361474 until=1794446074 (span 85s) baseVolume=0
+        B since=1794361474000 until=1794446074000 (span 0.9792d) baseVolume=208525
+
+######## https://api.dreamdex.io/v0  re-check 2026-11-12T01:44:38.854Z
+  A seconds 1d  -> 200 {"baseVolume":"0","baseVolumeRaw":"0","quoteVolume":"0","quoteVolumeRaw":"0","since":1794361474,"symbol":"SOMI:USDso","until":1794446074}
+
+  B millis  1d  -> 200 {"baseVolume":"393929.65","baseVolumeRaw":"393929650000000000000000","quoteVolume":"63825.071956","quoteVolumeRaw":"63825071956000000000000","since":1
+  C control     -> 200 {"symbols":[{"close":"0.1598","high":"0.1659","lastTradeAt":1794447878684,"low":"0.1571","open":"0.1639","symbol":"SOMI:USDso","timestamp":17944478803
+  D since=0     -> 200 {"baseVolume":"0","baseVolumeRaw":"0","quoteVolume":"0","quoteVolumeRaw":"0","since":0,"symbol":"SOMI:USDso","until":86400}
+
+  echo: A since=1794361474 until=1794446074 (span 85s) baseVolume=0
+        B since=1794361474000 until=1794446074000 (span 0.9792d) baseVolume=393929.65

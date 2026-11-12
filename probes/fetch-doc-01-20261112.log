@@ -1,0 +1,6 @@
+HTTP 404  13994 B  2026-11-12T01:41:27.940Z  https://dreamdex.io/docs/developers/http-api/market-data
+  ABSENT  :: silently skipped
+  ABSENT  :: rather than a 4xx
+  ABSENT  :: Wrong
+  ABSENT  :: SOMI:USDso,WETH:USDso
+  ABSENT  :: unknown symbols are silently skipped

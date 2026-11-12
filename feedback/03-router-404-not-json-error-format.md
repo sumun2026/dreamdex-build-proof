@@ -3,17 +3,21 @@
 Severity: normal
 Area: API
 
+## Summary
+
+The error-handling page promises that **all** error responses are JSON with a stable `name` plus an `Error-Name` header. That holds for errors raised inside a handler, but not for the router's own `404`: those come back `text/plain` — `404 page not found` — with no `Error-Name` header at all. Two of the paths that hit this are routes the market-data page itself tells callers about.
+
 ## Steps to reproduce
 
-The error-handling doc (https://dreamdex.io/docs/developers/http-api/error-handling) states two contracts:
+The error-handling doc (https://app.dreamdex.io/docs/developers/http-api/error-handling) states two contracts:
 
 > "All error responses use a consistent JSON format" — `{status, name, description}`
 
 > "The Error-Name response header also contains the error name for quick inspection without parsing the body."
 
-The market-data doc then directs callers to two paths it says return 404:
+The market-data doc then directs callers to two paths it says return 404 (`.../market-data`, markdown mirror `.../market-data.md`):
 
-> "There is no per-market path — `GET /v0/markets/{symbol}/orderbook` and `GET /v0/orderbooks/{symbol}` both 404."
+> "Order book depth is served **only** by the query-parameter form `GET /v0/orderbooks?symbols=<symbol>`. There is no per-market path - `GET /v0/markets/{symbol}/orderbook` and `GET /v0/orderbooks/{symbol}` both **404**."
 
 Request one of those, and an arbitrary unknown route, and look at the headers:
 
@@ -61,12 +65,15 @@ An integrator who follows the doc and writes one error path — parse JSON, swit
 
 - Captured 2026-11-07, re-run before filing: `probes/probe-errname.mjs` → `probes/probe-errname.json` (8 cases × both bases, each recording status, `Error-Name` header and body)
 - Header dumps for the three 404 routes above
+- Re-verified 2026-11-12 on both bases with the exact commands in this report: `probes/recheck-03-20261112.mjs` → `probes/recheck-03-20261112.log` — all three router 404s still `text/plain; charset=utf-8` with `(absent)` `Error-Name`, and the in-handler 400 control still JSON with `error-name: missing_field`, in the same run.
+- The two quoted doc sentences re-fetched 2026-11-12 from the `.md` mirror: `probes/docmd-20261112-developers_http-api_error-handling.md`, `probes/docmd-20261112-developers_http-api_market-data.md`
 
 ## Environment
 
 - `https://api.dreamdex.io/v0` (mainnet 5031) and `https://stg.api.dreamdex.io/v0` (testnet — "Somnia Tokyo" on the bounty page, Shannon `50312` per the SDK)
 - No auth, read-only GET
 - Wallet address: none — this item is read-only and unauthenticated; nothing was signed.
+- Docs as published 2026-11-07 and re-read 2026-11-12 (both sentences still live)
 
 ## What is *not* claimed
 

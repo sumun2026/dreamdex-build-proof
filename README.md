@@ -121,8 +121,16 @@ live WS bar legitimately moves ahead of REST). Run it yourself before believing 
   `unknown symbol … — call loadMarkets() first` on a fresh client even though `fetchMarkets()` works.
 - **`symbols` is a repeated query key, not a comma list.** `?symbols=A&symbols=B` works;
   `?symbols=A,B` is rejected as one malformed symbol. Helper: `symbolsQuery()` in `src/rest.js`.
+- **WebSocket subscribe params are not one shape.** `ohlcv` takes a singular string
+  (`params: { symbol: "SOMI:USDso", timeframe: "1d" }`) while `trades` and `orderbook` take an array
+  (`params: { symbols: ["SOMI:USDso"] }`). Send the wrong one and the server answers
+  `subscription_failed` for that channel — which reads like a broken channel but is a broken request.
+  Checked in `probes/ws-live-update-1111.mjs` and `probes/trade-id-cross-surface.mjs`.
 - **`since`/`until` are milliseconds.** Nothing in the HTTP docs says so; the auditor prints the
   difference rather than assuming the reader knows.
+- **Docs live on `app.dreamdex.io`.** `https://dreamdex.io/docs/...` returns `404`; each page also has a
+  raw markdown mirror at the same path with `.md` appended, which is what the evidence captures under
+  `probes/docmd-20261112-*.md` were fetched from.
 - **Perp markets are not in the REST API.** Not a bug — the market-data page enumerates a spot-only
   `{symbol}` universe. It does mean a perp integration has to go through the SDK or the indexer.
 
@@ -139,8 +147,11 @@ src/checks.js  the seven checks
 ## Limitations
 
 - Read-only: no authenticated endpoints, so orders, stops, balances and portfolio are not covered.
-- The WebSocket `ohlcv` channel is exercised at the **snapshot**; the `trades` and `order` channels are
-  not subscribed end-to-end, and live *update* frames are not compared against REST.
+- The auditor in `src/` exercises the WebSocket `ohlcv` channel at the **snapshot**; the `trades` and
+  `order` channels are not subscribed by `src/index.js`, and its live update frames are not compared
+  against REST. That comparison does exist, but as one-shot scripts: `probes/ws-live-update-1111.mjs`
+  (REST-vs-live frame parity over a timed watch, with a control run) and
+  `probes/trade-id-cross-surface.mjs` (report 09 — id formats and timestamp collisions).
 - The candle check is daily-bar only and covers the market given on the command line (`--market`), not
   every interval for every market.
 - Book comparison is a point-in-time top-of-book match, not a depth reconciliation. Two surfaces

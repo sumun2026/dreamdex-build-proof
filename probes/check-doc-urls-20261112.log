@@ -1,0 +1,20 @@
+200  273802 B  https://app.dreamdex.io/docs/developers/http-api/market-data
+        title: dreamDEX   canonical: (none)
+200  283071 B  https://app.dreamdex.io/docs/developers/http-api/error-handling
+        title: dreamDEX   canonical: (none)
+200  252956 B  https://app.dreamdex.io/docs/developers/http-api/trading
+        title: dreamDEX   canonical: (none)
+200  337430 B  https://app.dreamdex.io/docs/developers/websocket-api/operations
+        title: dreamDEX   canonical: (none)
+200  287835 B  https://app.dreamdex.io/docs/developers/libraries/ccxt
+        title: dreamDEX   canonical: (none)
+200  196985 B  https://app.dreamdex.io/docs/openapi
+        title: dreamDEX   canonical: (none)
+200  196986 B  https://app.dreamdex.io/docs/llms.txt
+        <!DOCTYPE html><html data-dpl-id="dpl_8YcLvvt879AJP9EQ1sNtL5YEBMsP" lang="en"><head><meta charSet="utf-8"/><meta name="v
+200    4372 B  https://app.dreamdex.io/llms.txt
+        # dreamDEX Documentation  > dreamDEX is a fully on-chain CLOB DEX on the Somnia network: zero-fee spot trading, event co
+200    7311 B  https://app.dreamdex.io/docs.md
+        # Introduction  > [!NOTE] > **Living document.** This documentation tracks dreamDEX as it ships. Sections may change as 
+200    3377 B  https://app.dreamdex.io/docs/developers/http-api/market-data.md
+        # Market Data  These public endpoints return information about available trading pairs, supported currencies, and curren

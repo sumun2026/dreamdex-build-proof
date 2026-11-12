@@ -1,0 +1,30 @@
+WS live trade updates: 4 | WS snapshot rows: 5 | REST /trades rows: 100
+
+=== live WS trade vs the REST row with the same timestamp ===
+
+  pair 1  ts=1794447058713  id match: NO
+    ws   id=1794447058934-0  sell 1.07 @ 0.1594   keys: id,price,quantity,side,timestamp
+    rest id=2102928824402922438429:4334984857321778183947  sell 1.07 @ 0.1594   keys: amount,cost,id,price,side,symbol,timestamp,txHash
+
+  pair 2  ts=1794447063513  id match: NO
+    ws   id=1794447063757-23  buy 1685.59 @ 0.1595   keys: id,price,quantity,side,timestamp
+    rest id=4334984857321778183974:996124179980349340397  buy 1685.59 @ 0.1595   keys: amount,cost,id,price,side,symbol,timestamp,txHash
+
+  pair 3  ts=1794447078715  id match: NO
+    ws   id=1794447078968-0  buy 1.01 @ 0.1597   keys: id,price,quantity,side,timestamp
+    rest id=2102928824402922438474:10533090866088187525780  buy 1.01 @ 0.1597   keys: amount,cost,id,price,side,symbol,timestamp,txHash
+
+  pair 4  ts=1794447098713  id match: NO
+    ws   id=1794447098940-0  sell 1.04 @ 0.1595   keys: id,price,quantity,side,timestamp
+    rest id=2102928824402922438513:4205857648805811322728  sell 1.04 @ 0.1595   keys: amount,cost,id,price,side,symbol,timestamp,txHash
+
+=== summary ===
+trades paired by timestamp: 4/4
+of those, id strings equal: 0
+any WS trade id present anywhere in the REST page: 0/4
+any REST trade id present in the WS stream: 0/100
+timestamp collisions inside the REST page: 1 of 100
+ws id shape example : 1794447058934-0
+rest id shape example: 2102928824402922438644:2933032307719852259491
+
+(other surfaces for reference: /markets returns 4 markets) -> does any REST row carry a "-0" style id? false

@@ -1,0 +1,23 @@
+subscribed ohlcv(1m, singular symbol) + trades(plural symbols) on wss://api.dreamdex.io/v0/ws/public
+ws error 
+
+frames in 180s: total=6 ack=0 snapshot=1 update=3 other=2
+  snap  id=undefined channel=ohlcv n=100 first={"timestamp":1794440100000,"open":"0.1595","high":"0.1596","low":"0.1595","close":"0.1595","volume":"3.15"}
+
+--- update frames (3) ---
+  id=undefined channel=ohlcv payload={"channel":"ohlcv","type":"update","symbol":"SOMI:USDso","timeframe":"1m","candle":{"timestamp":1794446100000,"open":"0.1597","high":"0.1597","low":"0.1597","close":"0.1597","volume":"1.05"}}
+  id=undefined channel=ohlcv payload={"channel":"ohlcv","type":"update","symbol":"SOMI:USDso","timeframe":"1m","candle":{"timestamp":1794446100000,"open":"0.1597","high":"0.1597","low":"0.1597","close":"0.1597","volume":"2.1"}}
+  id=undefined channel=ohlcv payload={"channel":"ohlcv","type":"update","symbol":"SOMI:USDso","timeframe":"1m","candle":{"timestamp":1794446100000,"open":"0.1597","high":"0.1597","low":"0.1593","close":"0.1593","volume":"3.2"}}
+
+--- other frames (2), first 8 ---
+  {"channel":"ohlcv","type":"subscribed","symbol":"SOMI:USDso","timeframe":"1m"}
+  {"type":"error","errorName":"subscription_failed","message":"subscription failed to channel: trades"}
+
+=== live WS 1m bar ts=1794446040000 vs REST ===
+  ws  : {"timestamp":1794446040000,"open":"0.1598","high":"0.1598","low":"0.1597","close":"0.1598","volume":"3.07"}
+  rest: {"close":"0.1598","high":"0.1598","low":"0.1597","open":"0.1598","timestamp":1794446040000,"volume":"3.07"}
+  REST /candles 1m returned 100 bars, status 200
+
+=== trades: live WS frames=0 trades=0 | REST status=200 n=100 ===
+  rest trade[0]: {"amount":"1.06","cost":"0.168964","id":"2582544170319370778917:4187410904732101769502","price":"0.1594","side":"sell","symbol":"SOMI:USDso","timestamp":1794446278720,"txHash":"0xf608c9e2c3d62b9ef04cc0855f742edd46e8e753d033bff2314eccc709d08311"}
+  live trades also present in the REST /trades page: 0/0

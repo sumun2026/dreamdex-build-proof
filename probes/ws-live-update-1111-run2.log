@@ -1,0 +1,33 @@
+control: REST /trades before the window -> 100 trades, newest ts=1794446338721
+subscribed ohlcv(1m, singular string symbol) + trades(plural symbols ARRAY — the shape that gets "subscribed") on wss://api.dreamdex.io/v0/ws/public
+ws error 
+
+frames in 240s: total=10 ack=0 snapshot=2 update=6 other=2
+frames that echo a client id (any "id" field present): 0 / 10
+  snap  id=undefined channel=ohlcv n=100 first={"timestamp":1794440340000,"open":"0.1595","high":"0.1596","low":"0.1594","close":"0.1594","volume":"1689.83"}
+  snap  id=undefined channel=trades n=4 first={"id":"1794446278971-0","price":"0.1594","quantity":"1.06","side":"sell","timestamp":1794446278720}
+
+--- update frames (6) ---
+  id=undefined channel=trades payload={"channel":"trades","type":"update","symbol":"SOMI:USDso","trade":{"id":"1794446358943-0","price":"0.1596","quantity":"1.06","side":"sell","timestamp":1794446358721}}
+  id=undefined channel=ohlcv payload={"channel":"ohlcv","type":"update","symbol":"SOMI:USDso","timeframe":"1m","candle":{"timestamp":1794446340000,"open":"0.1596","high":"0.1596","low":"0.1596","close":"0.1596","volume":"1.06"}}
+  id=undefined channel=trades payload={"channel":"trades","type":"update","symbol":"SOMI:USDso","trade":{"id":"1794446378953-0","price":"0.1597","quantity":"1.02","side":"buy","timestamp":1794446378720}}
+  id=undefined channel=ohlcv payload={"channel":"ohlcv","type":"update","symbol":"SOMI:USDso","timeframe":"1m","candle":{"timestamp":1794446340000,"open":"0.1596","high":"0.1597","low":"0.1596","close":"0.1597","volume":"2.08"}}
+  id=undefined channel=trades payload={"channel":"trades","type":"update","symbol":"SOMI:USDso","trade":{"id":"1794446399052-0","price":"0.1597","quantity":"1.04","side":"sell","timestamp":1794446398823}}
+  id=undefined channel=ohlcv payload={"channel":"ohlcv","type":"update","symbol":"SOMI:USDso","timeframe":"1m","candle":{"timestamp":1794446340000,"open":"0.1596","high":"0.1597","low":"0.1596","close":"0.1597","volume":"3.12"}}
+
+--- other frames (2), first 8 ---
+  {"channel":"ohlcv","type":"subscribed","symbol":"SOMI:USDso","timeframe":"1m"}
+  {"channel":"trades","type":"subscribed","symbols":["SOMI:USDso"]}
+
+=== live WS 1m bar ts=1794446280000 vs REST ===
+  ws  : {"timestamp":1794446280000,"open":"0.1596","high":"0.1597","low":"0.1595","close":"0.1597","volume":"3.08"}
+  rest: {"close":"0.1597","high":"0.1597","low":"0.1595","open":"0.1596","timestamp":1794446280000,"volume":"3.08"}
+  REST /candles 1m returned 99 bars, status 200
+
+=== trades: live WS frames=3 trades=0 | REST status=200 n=100 ===
+  rest trade[0]: {"amount":"1.04","cost":"0.165672","id":"3818476023257910737894:2102928824402922437588","price":"0.1593","side":"buy","symbol":"SOMI:USDso","timestamp":1794446578721,"txHash":"0xf2476b4450e8aca539bab59556e15b3a8922908363cb5c1913a1a411f77781d9"}
+  live trades also present in the REST /trades page: 0/0
+
+control after the 240s window: REST /trades now 100 rows, newest ts=1794446578721
+  trades that appeared on REST during the window and were NOT delivered on the WS trades channel: 12
+  (WS trades update frames received: 3)

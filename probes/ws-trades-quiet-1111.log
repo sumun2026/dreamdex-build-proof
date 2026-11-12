@@ -1,0 +1,51 @@
+REST /trades at start: status=200 n=100 newest=1794446638709
+
+=== 300s window ===
+socket: open=true close=code 1005 onerror=0 pings=14 pongs=0
+readyState at end of window: 3 (1 = OPEN, 2 = CLOSING, 3 = CLOSED)
+WS trades updates      : 14
+WS ohlcv  1m updates   : 14
+REST trades new in the same window: 14  (newest ts 1794446938713)
+  first fresh 1794446938713 | last fresh 1794446658709
+  WS trade ts range: 1794446658709 .. 1794446938713
+
+  last WS trade ts=1794446938713 vs newest fresh REST trade ts=1794446938713 -> REST is 0s ahead of what the WS stream delivered
+  fresh REST trades that the WS DID deliver (matched by timestamp): 14/14
+  fresh REST trades whose id string appears in any WS frame: 0/14
+  id formats -> WS: 1794446658948-0   REST: 3818476023257910738493:3634008582520815222307
+
+--- frame log ---
+  t+   899ms OPEN
+  t+  1066ms subscribed/trades {"channel":"trades","type":"subscribed","symbols":["SOMI:USDso"]}
+  t+  1098ms snapshot/trades {"channel":"trades","type":"snapshot","symbol":"SOMI:USDso","trades":[{"id":"1794446578950-0","price":"0.1593"
+  t+  1098ms subscribed/ohlcv {"channel":"ohlcv","type":"subscribed","symbol":"SOMI:USDso","timeframe":"1m"}
+  t+  1112ms snapshot/ohlcv {"channel":"ohlcv","type":"snapshot","symbol":"SOMI:USDso","timeframe":"1m","candles":[{"timestamp":1794440640
+  t+ 18980ms TRADE ts=1794446658709 id=1794446658948-0 buy 1@0.1593
+  t+ 20953ms undefined/- {"operation":"pong","serverTimestamp":1794446660933}
+  t+ 38981ms TRADE ts=1794446678709 id=1794446678951-0 sell 1.05@0.1592
+  t+ 40965ms undefined/- {"operation":"pong","serverTimestamp":1794446680946}
+  t+ 58968ms TRADE ts=1794446698711 id=1794446698937-0 buy 1@0.1594
+  t+ 60966ms undefined/- {"operation":"pong","serverTimestamp":1794446700948}
+  t+ 80972ms undefined/- {"operation":"pong","serverTimestamp":1794446720953}
+  t+ 98996ms TRADE ts=1794446738709 id=1794446738966-0 sell 1.03@0.1592
+  t+100976ms undefined/- {"operation":"pong","serverTimestamp":1794446740958}
+  t+118993ms TRADE ts=1794446758709 id=1794446758965-0 buy 1.08@0.1593
+  t+120978ms undefined/- {"operation":"pong","serverTimestamp":1794446760960}
+  t+138956ms TRADE ts=1794446778708 id=1794446778928-0 sell 1.02@0.1592
+  t+140983ms undefined/- {"operation":"pong","serverTimestamp":1794446780964}
+  t+158989ms TRADE ts=1794446798709 id=1794446798961-0 buy 1.09@0.1594
+  t+160984ms undefined/- {"operation":"pong","serverTimestamp":1794446800966}
+  t+179272ms TRADE ts=1794446819008 id=1794446819243-0 sell 1.07@0.1592
+  t+180992ms undefined/- {"operation":"pong","serverTimestamp":1794446820975}
+  t+198972ms TRADE ts=1794446838708 id=1794446838943-0 buy 1.07@0.1594
+  t+201022ms undefined/- {"operation":"pong","serverTimestamp":1794446840985}
+  t+218977ms TRADE ts=1794446858709 id=1794446858947-0 sell 1.05@0.1592
+  t+221003ms undefined/- {"operation":"pong","serverTimestamp":1794446860986}
+  t+238989ms TRADE ts=1794446878709 id=1794446878959-0 buy 1.06@0.1594
+  t+241008ms undefined/- {"operation":"pong","serverTimestamp":1794446880992}
+  t+258955ms TRADE ts=1794446898713 id=1794446898927-0 sell 1.05@0.1592
+  t+261011ms undefined/- {"operation":"pong","serverTimestamp":1794446900994}
+  t+279167ms TRADE ts=1794446918913 id=1794446919141-0 buy 1.08@0.1593
+  t+281021ms undefined/- {"operation":"pong","serverTimestamp":1794446921005}
+  t+298969ms TRADE ts=1794446938713 id=1794446938943-0 sell 1.02@0.1592
+  t+300952ms CLOSE code=1005 reason=""

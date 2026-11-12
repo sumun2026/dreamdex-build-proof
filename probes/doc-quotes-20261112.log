@@ -1,0 +1,12 @@
+200 PRESENT  developers/libraries/ccxt.md  ::  SOMI/USDC  (3258 B)
+200 ABSENT   developers/libraries/ccxt.md  ::  usdc  (3258 B)
+200 PRESENT  developers/websocket-api/operations.md  ::  Required  (4000 B)
+200 PRESENT  developers/http-api/error-handling.md  ::  invalid_interval  (3020 B)
+200 ABSENT   developers/http-api/trading.md  ::  interval  (2440 B)
+200 ABSENT   developers/http-api/market-data.md  ::  interval  (3377 B)
+200 ABSENT   developers/http-api/market-data.md  ::  limit  (3377 B)
+
+openapi page: HTTP 200 197028 B
+404  196935 B  https://app.dreamdex.io/openapi.json
+404      19 B  https://api.dreamdex.io/v0/openapi.json
+404      19 B  https://api.dreamdex.io/openapi.json

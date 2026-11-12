@@ -1,7 +1,11 @@
 # `/v0/markets/{symbol}/volume` never states that `since`/`until` are milliseconds, and a caller who sends Unix seconds gets HTTP 200 with all-zero volume
 
 Severity: major
-Area: API + docs
+Area: API, docs
+
+## Summary
+
+`/volume`'s `since`/`until` are Unix **milliseconds**, but the unit appears nowhere on the page or in the parameter table. A caller who passes the near-universal Unix-seconds value gets HTTP `200` and `baseVolume: "0"` — a silently wrong answer, not an error. Both documented guards are structurally unable to catch it: a seconds pair is 1000× too narrow to trip the 40-day cap, and its `until` lands in 1970, so it is trivially "older than 30 minutes".
 
 ## Steps to reproduce
 
@@ -68,12 +72,15 @@ State the unit in the parameter table, and reject a window that cannot be real �
 ## Evidence
 
 - Captured 2026-11-07, re-run the same day before filing: `probes/probe-units.mjs` → `probes/probe-units.json`, `probes/probe-confirm.mjs` → `probes/probe-confirm.json`
+- Re-verified 2026-11-12, both bases: `probes/recheck-02-20261112.mjs` → `probes/recheck-02-20261112.log`. Case A `200` `baseVolume:"0"` with the server echoing `since:1794361474 until:1794446074` (a 85-second span), case B the same window in ms returning real volume, case D accepted, on both bases in the same run.
 - 10 cases incl. seconds/ms/mixed and both symbols; every case carries the server's own `since`/`until` echo
 
 ## Environment
 
 - `https://api.dreamdex.io/v0` (mainnet, Somnia 5031) and `https://stg.api.dreamdex.io/v0` (testnet — the bounty page's "Somnia Tokyo", Shannon `50312` per the SDK)
 - No auth, no wallet, read-only GET
+- Wallet address: none — this item is read-only and unauthenticated; nothing was signed.
+- Docs as published 2026-11-07; the market-data page re-read 2026-11-12 still has no unit statement for `since`/`until` (see `probes/docmd-20261112-developers_http-api_market-data.md`)
 - Reference: `GET /v0/tickers` returns `lastTradeAt` / `timestamp` as 13-digit ms, so the API is internally consistent about ms — the gap is documentation only
 
 ## What is *not* claimed

@@ -1,7 +1,7 @@
 # `/candles` requires a parameter no page names, and silently ignores every attempt to widen or move its window
 
 Severity: normal
-Area: docs, API
+Area: API, docs
 
 ## Summary
 
