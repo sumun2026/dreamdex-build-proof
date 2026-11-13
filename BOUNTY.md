@@ -18,13 +18,13 @@ this repository rather than in `security@dreamdex.io`.
 | # | Severity | Area | Summary |
 |---|---|---|---|
 | 01 | major | docs | The docs' own `# Wrong` example promises `200` + `[]` for a bad `symbols` value; the API answers `400 invalid_param`. |
-| 02 | major | API, docs | `/volume`'s `since`/`until` unit is never documented; a caller passing seconds gets **HTTP 200 with volume 0**, not an error. |
+| 02 | major | API | `/volume`'s `since`/`until` unit is never documented; a caller passing seconds gets **HTTP 200 with volume 0**, not an error. |
 | 03 | normal | API | "All error responses are JSON + `Error-Name`" does not hold for router-level 404s (`text/plain`, no header). |
 | 04 | major | docs | Every CCXT example uses `SOMI/USDC`; no `USDC` currency exists on this venue — the quote is always `USDso`. |
-| 05 | normal | API, docs | The WebSocket `id` field is documented `Required: yes`; omitting it executes the operation and returns `id: 0`, and `pong` carries no `id` at all. |
+| 05 | normal | API | The WebSocket `id` field is documented `Required: yes`; omitting it executes the operation and returns `id: 0`, and `pong` carries no `id` at all. |
 | 06 | major | API | `/candles?interval=1d` disagrees with dreamDEX's own `/volume` **and** the WS `ohlcv` snapshot on the oldest completed daily bar of **every** market — 7 of 7, both environments, on three runs five days apart. The two other surfaces agree with each other. |
-| 07 | normal | API, docs | `invalid_interval` is a documented error name that no endpoint ever returns. |
-| 08 | normal | API, docs | `/candles` refuses to work without an `interval` parameter that no doc page names, and silently ignores `limit`/`from`/`since`/`until`/`max` with `200`. |
+| 07 | normal | API | `invalid_interval` is a documented error name that no endpoint ever returns. |
+| 08 | normal | API | `/candles` refuses to work without an `interval` parameter that no doc page names, and silently ignores `limit`/`from`/`since`/`until`/`max` with `200`. |
 | 09 | major | API | The same fill gets a **different `id` format** per surface — REST `2102928824…:4334984857…`, WS `1794447058934-0`, 0/4 and 0/100 overlap — and the only shared field, `timestamp`, is not unique: one `txHash` fills twice in the same millisecond. |
 
 Totals: **5 major + 4 normal**.

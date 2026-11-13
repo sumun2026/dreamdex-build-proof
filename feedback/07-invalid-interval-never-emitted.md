@@ -1,7 +1,7 @@
 # `invalid_interval` is a documented error name that no endpoint ever returns
 
 Severity: normal
-Area: API, docs
+Area: API
 
 ## Summary
 

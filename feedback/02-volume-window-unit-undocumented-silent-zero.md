@@ -1,7 +1,7 @@
 # `/v0/markets/{symbol}/volume` never states that `since`/`until` are milliseconds, and a caller who sends Unix seconds gets HTTP 200 with all-zero volume
 
 Severity: major
-Area: API, docs
+Area: API
 
 ## Summary
 

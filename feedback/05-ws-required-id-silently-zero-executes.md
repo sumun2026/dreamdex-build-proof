@@ -1,7 +1,7 @@
 # WebSocket: omitting the required `id` executes the request and echoes `id: 0` instead of an error
 
 Severity: normal
-Area: API, docs
+Area: API
 
 ## Summary
 
