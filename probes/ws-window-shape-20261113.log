@@ -1,0 +1,12 @@
+
+=== mainnet  market=WETH:USDso  now=2026-11-13T09:05:06.319Z
+REST /candles   n=100  oldest=2026-08-06T00:00:00.000Z  newest=2026-11-13T00:00:00.000Z
+WS   ohlcv 1d  n=100  oldest=2026-08-06T00:00:00.000Z  newest=2026-11-13T00:00:00.000Z
+WS span days=100  (n=100)  -> capped at 100 bars, oldest = newest - (n-1) days
+gap: WS has 0 bars older than REST oldest
+
+=== shannon  market=SOMI:USDso  now=2026-11-13T09:05:11.838Z
+REST /candles   n=25  oldest=2026-10-20T00:00:00.000Z  newest=2026-11-13T00:00:00.000Z
+WS   ohlcv 1d  n=100  oldest=2026-08-06T00:00:00.000Z  newest=2026-11-13T00:00:00.000Z
+WS span days=100  (n=100)  -> capped at 100 bars, oldest = newest - (n-1) days
+gap: WS has 75 bars older than REST oldest

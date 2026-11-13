@@ -1,0 +1,14 @@
+
+#### https://api.dreamdex.io/v0
+  currency codes  : SOMI, USDso, USDC.e, WBTC, WETH
+  has 'USDC'      : false   has 'USDC.e': true
+  market ids      : SOMI:USDso, USDC.e:USDso, WBTC:USDso, WETH:USDso
+  CCXT unified    : SOMI/USDso, USDC.e/USDso, WBTC/USDso, WETH/USDso
+  'SOMI/USDC' valid? false
+
+#### https://stg.api.dreamdex.io/v0
+  currency codes  : USDso, WBTC, WETH, SOMI
+  has 'USDC'      : false   has 'USDC.e': false
+  market ids      : SOMI:USDso, WBTC:USDso, WETH:USDso
+  CCXT unified    : SOMI/USDso, WBTC/USDso, WETH/USDso
+  'SOMI/USDC' valid? false

@@ -58,6 +58,7 @@ Identical on `stg.api.dreamdex.io` and `api.dreamdex.io`. The correct repeated-k
 
 - `probes/probe-verbatim.mjs` — sends the doc's `# Wrong` example and the correct repeated-key form verbatim against both bases. Outputs: `probes/probe-verbatim.json` (2026-11-07) and `probes/probe-verbatim-20261112.json` / `.log` (2026-11-12 re-run).
 - `probes/recheck-01-20261112.mjs` → `probes/recheck-01-20261112.log` — every row of the table below re-issued on both bases on 2026-11-12: the same five `400 invalid_param` answers and the same `200` with two books for the control.
+- Third run, 2026-11-13, six days after the first draft: `probes/recheck-01-20261113.mjs` → `probes/recheck-01-20261113.log`. Same five `400 invalid_param` answers with the same `invalid_symbols` context on **both** bases, and the same `200` with two books for the repeated-key control. No verdict changed.
 - `probes/probe-confirm.mjs` / `.json` — the wider case sweep captured at filing.
 - The quoted doc sentences re-fetched 2026-11-12 from the page's raw markdown mirror (`https://app.dreamdex.io/docs/developers/http-api/market-data.md`), saved as `probes/docmd-20261112-developers_http-api_market-data.md` — the `# Wrong` example and the "silently skipped … rather than a 4xx" sentence are both still published.
 

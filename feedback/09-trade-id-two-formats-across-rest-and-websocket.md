@@ -12,9 +12,9 @@ Measured on mainnet `SOMI:USDso`: **4 of 4** live WS trade updates pair with a R
 **0 of 4** WS ids appear in REST.
 
 That leaves a builder with **no key that works on both surfaces**. The only field present in both records
-with the same value is `timestamp` — and `timestamp` is demonstrably not unique: in the current 100-row
-REST page there are 99 unique timestamps, i.e. **one collision**, and that collision is a single
-transaction split into two fills (same `txHash`, same millisecond, different prices):
+with the same value is `timestamp` — and `timestamp` is demonstrably not unique: in the 100-row
+REST page captured on **2026-11-12** there were 99 unique timestamps, i.e. **one collision**, and that
+collision is a single transaction split into two fills (same `txHash`, same millisecond, different prices):
 
 ```json
 {"amount":"27","cost":"4.3146","id":"4334984857321778181893:4242751136953230423781","price":"0.1598",
@@ -28,6 +28,12 @@ transaction split into two fills (same `txHash`, same millisecond, different pri
 `2026-11-12T01:12:57.321Z` — one trade, two fills, one millisecond, and no field other than `id` that
 distinguishes them. So the usual reconciliation pattern is not merely awkward, it is **wrong**: it either
 drops a real fill or counts one twice.
+
+The collision is **data-dependent, not guaranteed on every page**: the 100-row REST page read on 2026-11-13
+happened to have 100 unique timestamps and no collision at all (`probes/trade-id-cross-surface-20261113.log`,
+`timestamp collisions inside the REST page: 0 of 100`). That does not weaken the finding — it is exactly why
+`timestamp` cannot be used as a join key, because a client cannot know in advance whether the page it just
+fetched contains a collision, and the same split-fill shape demonstrably occurs in the live feed.
 
 ## The two records, side by side
 
@@ -114,12 +120,19 @@ WebSocket page, because today the field is called `id` in both and nothing marks
 ## Actual
 
 The same fill has two unrelated `id` values, the size field changes name between surfaces, and the one
-field that does match (`timestamp`) collides in the current data.
+field that does match (`timestamp`) collides in real data.
 
 ## Evidence
 
 - `probes/trade-id-cross-surface.mjs` + `probes/trade-id-cross-surface.log` — the 4 live pairs, the
   `0/100` and `0/4` id intersections, `timestamp collisions: 1 of 100`, and the key-set diff.
+- Re-run 2026-11-13: `probes/trade-id-cross-surface.mjs` → `probes/trade-id-cross-surface-20261113.log`
+  (180 s watch). **3/3** live WS updates paired to a REST row by timestamp, **0/3** sharing an `id`,
+  **0/3** WS ids present anywhere in the REST page, **0/100** REST ids present in the WS stream. The WS id
+  shape is again `<millisecond>-<sequence>` (`1794560739098-0`, `1794560759092-3`) and the REST id again
+  `<big-number>:<big-number>` (`4168964160658392538474:5054407876196451016024`), and no REST row carries a
+  `-N`-style id. The only thing that differs from the 11-12 capture is the timestamp-collision count
+  (0 of 100 that day — see the note in the Summary).
 - `probes/ws-trades-quiet-1111.mjs` + `probes/ws-trades-quiet-1111.log` — a 300 s instrumented watch that
   is included here as the **control**: the `trades` channel delivered 14/14 fills that REST showed in the
   same window, so this report is *not* a claim that the stream misses trades. It only shows the two

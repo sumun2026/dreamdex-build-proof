@@ -1,0 +1,36 @@
+
+######## https://stg.api.dreamdex.io/v0  re-check 2026-11-13T09:00:19.716Z
+  404 /markets/SOMI:USDso/orderbook
+        content-type: text/plain; charset=utf-8
+        Error-Name  : (absent)
+        body        : 404 page not found 
+  404 /orderbooks/SOMI:USDso
+        content-type: text/plain; charset=utf-8
+        Error-Name  : (absent)
+        body        : 404 page not found 
+  404 /nonexistent-route
+        content-type: text/plain; charset=utf-8
+        Error-Name  : (absent)
+        body        : 404 page not found 
+  400 /orderbooks
+        content-type: application/json
+        Error-Name  : missing_field
+        body        : {"description":"Query argument symbols is required, but not found","name":"missing_field","status":400} 
+
+######## https://api.dreamdex.io/v0  re-check 2026-11-13T09:00:23.956Z
+  404 /markets/SOMI:USDso/orderbook
+        content-type: text/plain; charset=utf-8
+        Error-Name  : (absent)
+        body        : 404 page not found 
+  404 /orderbooks/SOMI:USDso
+        content-type: text/plain; charset=utf-8
+        Error-Name  : (absent)
+        body        : 404 page not found 
+  404 /nonexistent-route
+        content-type: text/plain; charset=utf-8
+        Error-Name  : (absent)
+        body        : 404 page not found 
+  400 /orderbooks
+        content-type: application/json
+        Error-Name  : missing_field
+        body        : {"description":"Query argument symbols is required, but not found","name":"missing_field","status":400} 

@@ -91,6 +91,13 @@ generic `invalid_param`, even though a purpose-built name exists in the table on
 - `probes/probe-interval-both-bases.mjs` and its captured output
   `probes/probe-interval-both-bases.log` (2026-11-08): all 12 REST interval values plus the absent
   case, and three WS `timeframe` cases, on mainnet and `stg` in one run.
+- Re-run 2026-11-13, five days after the first draft: `probes/probe-interval-both-bases.mjs` →
+  `probes/probe-interval-both-bases-20261113.log`. The enum is again exactly `["1m","5m","15m","1h","4h","1d"]`
+  on **both** bases, the six valid values again `200`, and `3m` / `1w` / `1s` / `bogus` / `1M` / `60` again
+  `400 invalid_param` with the same description text naming the allowed values; the absent `interval` again
+  `400 missing_field` ("Query argument interval is required, but not found"). The three WS `timeframe` cases
+  (`3m`, `1w`, null) again answered `subscription_failed` on both bases. Nothing changed — and the
+  `invalid_interval` row in the validation table of the error-handling page is still unpublished.
 - `probes/probe-ws-channels2.mjs` section E (12 REST interval values, with `error-name` header) and
   `probes/probe-ws-channels3.mjs` section 1 (REST + WS error names for the same failure).
 - Live error-handling page re-fetched 2026-11-08 (HTTP 200):

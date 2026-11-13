@@ -73,6 +73,7 @@ State the unit in the parameter table, and reject a window that cannot be real �
 
 - Captured 2026-11-07, re-run the same day before filing: `probes/probe-units.mjs` → `probes/probe-units.json`, `probes/probe-confirm.mjs` → `probes/probe-confirm.json`
 - Re-verified 2026-11-12, both bases: `probes/recheck-02-20261112.mjs` → `probes/recheck-02-20261112.log`. Case A `200` `baseVolume:"0"` with the server echoing `since:1794361474 until:1794446074` (a 85-second span), case B the same window in ms returning real volume, case D accepted, on both bases in the same run.
+- Re-verified again 2026-11-13, both bases: `probes/recheck-02-20261113.mjs` → `probes/recheck-02-20261113.log`. Case A again `200` with `baseVolume:"0"` and the server again echoing the seconds pair as a ~85-second span (mainnet `since:1794474008 until:1794558608`, `stg` the same), case B again the same window in ms returning a real volume (mainnet `880378.23`; the figure moves because volume moves — the shape does not), case C `/tickers` again `200`, case D `since=0&until=86400` again accepted with `baseVolume:"0"`. The absolute numbers in the transcript differ from the 11-07 capture for that reason; the *behaviour* is identical on both bases.
 - 10 cases incl. seconds/ms/mixed and both symbols; every case carries the server's own `since`/`until` echo
 
 ## Environment

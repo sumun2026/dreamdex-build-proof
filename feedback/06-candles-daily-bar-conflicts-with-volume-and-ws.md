@@ -16,6 +16,10 @@ exactly `index 0` — while every series grew** (mainnet SOMI 94 → 98 daily ba
 therefore a permanent head of the REST series, not a retention edge that scrolls away with time. See the second table
 below.
 
+**Re-run again 2026-11-13, five days after the first draft: the same 7 bars, the same byte-identical volumes and
+opens, still exactly `index 0`** (mainnet SOMI 98 → 100 daily bars, Shannon 23 → 25). Third independent
+confirmation, and the values in the tables below have not moved once since 11-08.
+
 The clearest case, mainnet `SOMI:USDso`, day **2026-08-06 (UTC)**, `timestamp 1785974400000`:
 
 | field | REST `/candles?interval=1d` | REST `/volume` (same UTC day) | WS `ohlcv` snapshot |
@@ -128,11 +132,41 @@ WETH:USDso     rest=23 ws=88  oldest=2026-10-20 | disagreeing bars=1
 
 Every disputed volume and open on 11-11 equals its 11-08 value exactly, on all 7 markets.
 
-**7 of 7 markets, on both runs. In 7 of 7 the bad bar is `index 0`, the oldest bar REST serves. In 7 of 7, `/volume`
-and the WS feed agree with each other and `/candles` is the outlier.**
+Same script, re-run a third time **2026-11-13** (`probes/probe-candle-all-markets-20261113-mainnet.log`,
+`probes/probe-candle-all-markets-20261113-shannon.log`):
 
-Deliberately excluded: the **newest** bar of the Shannon rows is the **still-open UTC day** — it appeared as a second
-"disagreement" on 11-08 for SOMI and WBTC (index 18) and again on 11-11 for SOMI (index 22). `/volume` refuses that
+```
+mainnet — 4 REST markets, interval=1d
+SOMI:USDso     rest=100 ws=100 oldest=2026-08-06 | disagreeing bars=2
+   index 0 of 100  2026-08-06  /candles vol=1152641.11  open=0.0894   | ws vol=2988352.82  open=0.0906   | /volume 2988352.82
+   index 99 of 100 2026-11-13  <- the still-open UTC day, EXCLUDED from the claim (see below)
+USDC.e:USDso   rest=99  ws=100 oldest=2026-08-06 | disagreeing bars=1
+   index 0 of 99   2026-08-06  /candles vol=1486.63     open=1.0002   | ws vol=4625.52     open=1.0002   | /volume 4625.52
+WBTC:USDso     rest=100 ws=100 oldest=2026-08-06 | disagreeing bars=1
+   index 0 of 100  2026-08-06  /candles vol=8.37105     open=64602.2  | ws vol=17.22636    open=64631    | /volume 17.22636
+WETH:USDso     rest=100 ws=100 oldest=2026-08-06 | disagreeing bars=2
+   index 0 of 100  2026-08-06  /candles vol=31.8        open=1906.53  | ws vol=58.1861     open=1906.16  | /volume 58.1861
+   index 99 of 100 2026-11-13  <- the still-open UTC day, EXCLUDED from the claim (see below)
+
+shannon — 3 REST markets, interval=1d
+SOMI:USDso     rest=25 ws=100 oldest=2026-10-20 | disagreeing bars=1
+   index 0 of 25  2026-10-20  /candles vol=161000      open=0.1852   | ws vol=214600      open=0.1877   | /volume 214600
+WBTC:USDso     rest=25 ws=100 oldest=2026-10-20 | disagreeing bars=1
+   index 0 of 25  2026-10-20  /candles vol=0.93554     open=81535.3  | ws vol=1.24767     open=81862    | /volume 1.24767
+WETH:USDso     rest=25 ws=90  oldest=2026-10-20 | disagreeing bars=1
+   index 0 of 25  2026-10-20  /candles vol=8.4592      open=2390.19  | ws vol=11.197      open=2405.47  | /volume 11.197
+```
+
+Every disputed volume and open on 11-13 equals its 11-08 value exactly, on all 7 markets, a third time.
+The `disagreeing bars=2` rows are the **still-open UTC day** of 13 Nov (index 99 on mainnet), counted by the
+script and excluded from the claim by the same rule as before — see the note below.
+
+**7 of 7 markets, on all three runs. In 7 of 7 the bad bar is `index 0`, the oldest bar REST serves. In 7 of 7,
+`/volume` and the WS feed agree with each other and `/candles` is the outlier.**
+
+Deliberately excluded: the **newest** bar of the rows is the **still-open UTC day** — it appeared as a second
+"disagreement" on 11-08 for SOMI and WBTC (index 18), again on 11-11 for SOMI (index 22), and again on 11-13 for
+mainnet SOMI and WETH (index 99). `/volume` refuses that
 window outright (`400 "until must be at least 30 minutes in the past"`, their documented rule) and a live WS bar
 legitimately moves while REST lags, so it proves nothing. On 11-11 the Shannon WBTC open bar happened to match REST
 exactly, which is the expected noise on an unfinished day. It is listed so you can see it was measured, not quietly
@@ -156,9 +190,17 @@ dropped; the finding does not rest on it, and every counted disagreement above i
              ratio /volume vs /candles = 2.593x
   2026-08-06 is index 0 of 98 (oldest=2026-08-06, newest=2026-11-11)
   2026-08-07 /candles=1612914.18  /volume=1612914.18   <- still an exact match
+
+2026-11-13 re-run (`probes/probe-candle-scan-20261113.log`):
+  REST /candles?interval=1d -> 100 bars; WS ohlcv snapshot -> 100 bars
+  bars compared: 99 | volume mismatches: 1 | not comparable: 1
+  2026-08-06  /candles volume=1152641.11 | /volume 2988352.82 | WS 2988352.82
+             ratio /volume vs /candles = 2.593x
+  2026-08-06 is index 0 of 100 (oldest=2026-08-06, newest=2026-11-13)
+  2026-08-07 /candles=1612914.18  /volume=1612914.18   <- still an exact match
 ```
 
-The day count grew and the mismatch stayed a single bar: on 11-11, 96 of the 97 comparable daily bars agree exactly
+The day count grew and the mismatch stayed a single bar: on 11-13, 98 of the 99 comparable daily bars agree exactly
 and the one that does not is still `index 0`.
 Re-run five times over ~3 hours on 11-08, including once at the end of that session
 (`probes/recheck-06.mjs`): same single day, same numbers, byte-for-byte.
@@ -168,21 +210,27 @@ Re-run five times over ~3 hours on 11-08, including once at the end of that sess
 ```
 mainnet 11-11  REST day 0 = 2026-08-06 | WS window 2026-08-04 → 2026-11-11 (100 bars) | that day is WS index 2 | /volume answers for it
 shannon 11-11  REST day 0 = 2026-10-20 | WS window 2026-08-04 → 2026-11-11 (100 bars) | that day is WS index 77 | /volume answers for it
+
+mainnet 11-13  REST day 0 = 2026-08-06 | WS window 2026-08-06 → 2026-11-13 (100 bars) | that day is WS index 0 | /volume answers for it
+shannon 11-13  REST day 0 = 2026-10-20 | WS window 2026-08-06 → 2026-11-13 (100 bars) | that day is WS index 75 | /volume answers for it
 ```
 
 Two measured facts about that position (`probes/ws-window-shape.mjs`, re-run 2026-11-11 →
-`probes/ws-window-shape-20261111.log`):
+`probes/ws-window-shape-20261111.log`, and again 2026-11-13 → `probes/ws-window-shape-20261113.log`):
 
 1. **The WS `ohlcv` snapshot is a fixed 100-bar window ending the current UTC day, not a deeper history.**
-   On 11-11 both bases return exactly 100 daily bars, 2026-08-04 → 2026-11-11; Shannon WETH returns fewer
-   (88) because that market's data starts later. So the WS comparison is not an artifact of the two
-   surfaces covering different ranges: **the disputed day is an ordinary interior bar of the WS feed** —
-   `index 2` of 100 on mainnet, `index 77` of 100 on Shannon — and `/volume` is asked for it by explicit
+   On 11-11 both bases returned exactly 100 daily bars, 2026-08-04 → 2026-11-11; Shannon WETH returned fewer
+   (88) because that market's data starts later. On 11-13 the window has slid forward two days to
+   2026-08-06 → 2026-11-13 on both bases, still 100 bars (Shannon WETH 90), and it now starts on exactly the
+   same day as REST's oldest mainnet bar. So the WS comparison is not an artifact of the two
+   surfaces covering different ranges: **the disputed day is an ordinary bar of the WS feed** —
+   `index 2` of 100 on mainnet and `index 77` of 100 on Shannon on 11-11, `index 0` of 100 on mainnet and
+   `index 75` of 100 on Shannon on 11-13 — and `/volume` is asked for it by explicit
    millisecond window, so it needs no retention at all.
 2. **The bad bar is always exactly `index 0` of what `/candles` chooses to return**, wherever that lands —
-   2026-08-06 on mainnet, 2026-10-20 on Shannon, never any other index, in all 7 markets, on both runs.
-   REST's head does not scroll while its tail grows (94 → 98 and 19 → 23 bars over three days), so `index 0`
-   is the same physical day in both runs.
+   2026-08-06 on mainnet, 2026-10-20 on Shannon, never any other index, in all 7 markets, on all three runs.
+   REST's head does not scroll while its tail grows (94 → 98 → 100 and 19 → 23 → 25 bars over five days), so `index 0`
+   is the same physical day in every run.
 
 That is the observation; the cause is theirs. The shape is consistent with the first bar of the REST series
 being aggregated from a mid-day start (the market's own listing/retention instant) and then published as a
@@ -218,14 +266,19 @@ The oldest completed daily bar of every market disagrees between surfaces, silen
 
 - `probes/probe-candle-all-markets.mjs` + `.log` — all 7 markets, both bases, bar-by-bar; the table above.
   Dated re-runs of the same script: `probe-candle-all-markets-20261111-mainnet.log` and
-  `probe-candle-all-markets-20261111-shannon.log` (2026-11-11, identical figures).
+  `probe-candle-all-markets-20261111-shannon.log` (2026-11-11, identical figures), and
+  `probe-candle-all-markets-20261113-mainnet.log` and `probe-candle-all-markets-20261113-shannon.log`
+  (2026-11-13, identical figures again).
 - `probes/probe-candle-scan.mjs` + `probes/probe-candle-scan.log` (93-bar sweep, 1 mismatch, index 0) and
-  `probes/probe-candle-scan-20261111.log` (2026-11-11: 97 comparable bars, 1 mismatch, still index 0).
+  `probes/probe-candle-scan-20261111.log` (2026-11-11: 97 comparable bars, 1 mismatch, still index 0) and
+  `probes/probe-candle-scan-20261113.log` (2026-11-13: 99 comparable bars, 1 mismatch, still index 0, ratio
+  still 2.593x).
 - `probes/probe-candle-conflict.mjs` + `.log` (field-by-field diff, 3 determinism passes, `/volume` control).
 - `probes/probe-candle-diff.mjs` + `.log` (per-interval WS↔REST comparison; 1m/15m/1h/4h bars match exactly —
   only daily diverges).
 - `probes/recheck-06.mjs` + `.log` (three surfaces, one day, same-turn re-verification).
-- `probes/ws-window-shape.mjs` + `probes/ws-window-shape-20261111.log` (2026-11-11) — bar count, oldest and newest
+- `probes/ws-window-shape.mjs` + `probes/ws-window-shape-20261111.log` (2026-11-11) and
+  `probes/ws-window-shape-20261113.log` (2026-11-13) — bar count, oldest and newest
   timestamps of the WS
   daily window on both bases vs REST's, which is what pins the WS coverage of the disputed day.
 - Check 6 of **https://github.com/sumun2026/dreamdex-build-proof** prints this comparison end-to-end

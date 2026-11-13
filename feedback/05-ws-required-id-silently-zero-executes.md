@@ -104,7 +104,8 @@ consumed — a mis-attributed order response, not a visible error.
 - Live WS session against `wss://api.dreamdex.io/v0/ws/public`, 2026-11-08; transcript in
   `probes/probe-ws.json` (case 7: `{"operation":"getMarkets"}` → `{"id":0,"status":200,"payload":{…}}`).
 - Re-run script: `probes/probe-ws.mjs` (10 cases, both mainnet and testnet; testnet reproduces).
-- Operations page fetched live, HTTP 200 (`src/LIVE_developers_websocket-api_operations.txt`).
+- Re-run 2026-11-13, five days after the first draft: `probes/probe-ws.mjs` → `probes/recheck-05-20261113.log` (raw frames in `probes/probe-ws-20261113.json`). Case 7 — `{"operation":"getMarkets"}` with the `id` omitted — again answered `{"id":0,"status":200,"payload":{…}}` on **both** bases instead of `invalid_request`, while case 4 (`unknown_operation`), case 5 (`invalid_request`, "missing operation field") and case 6 (`invalid_request`, "invalid JSON message") in the same run still return the documented errors. The other three cases are unchanged too, including the `subscription_failed` for the comma-joined `symbols` string. Unchanged.
+- Operations page fetched live, HTTP 200 (`probes/LIVE_developers_websocket-api_operations.txt`).
 
 ## What is *not* claimed
 

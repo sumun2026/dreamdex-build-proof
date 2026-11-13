@@ -1,0 +1,74 @@
+
+######## mainnet  wss://api.dreamdex.io/v0/ws/public
+  [open] connected
+  --- 1. documented heartbeat: {"operation":"ping"} -> pong
+  >> {"operation":"ping"}
+  << {"operation":"pong","serverTimestamp":1794560453748}
+  --- 2. documented REST-over-WS request shape
+  >> {"id":1,"operation":"getMarkets","params":{"symbol":"SOMI:USDso"}}
+  << {"id":1,"status":200,"payload":{"markets":[{"base":"0x936Ab8C674bcb567CD5dEB85D8A216494704E9D8","baseDecimals":18,"contract":"0xa936da11B57b50A344e1293AAaE5232885ea2bDE","kind":"spot","lotSize":"0.0001","minQuantity":"0. …
+  --- 3. docs: operation is CASE-INSENSITIVE
+  >> {"id":2,"operation":"GETMARKETS"}
+  << {"id":2,"status":200,"payload":{"markets":[{"base":"0x28f34DeFd2b4CB48d9eE6d89f2Be4Bc601694c00","baseDecimals":18,"contract":"0x035De7403eac6872787779CCA7CCF1b4CDb61379","kind":"spot","lotSize":"0.01","minQuantity":"1"," …
+  --- 4. docs example error: unknown operation
+  >> {"id":3,"operation":"invalidOp"}
+  << {"type":"error","errorName":"unknown_operation","message":"unknown operation: invalidOp","id":3}
+  --- 5. docs: missing operation -> invalid_request
+  >> {"id":4}
+  << {"type":"error","errorName":"invalid_request","message":"missing operation field","id":4}
+  --- 6. docs: unparseable JSON -> invalid_request
+  >> raw "notjson"
+  << {"type":"error","errorName":"invalid_request","message":"invalid JSON message"}
+  --- 7. docs: id is REQUIRED (integer) - omit it
+  >> {"operation":"getMarkets"}
+  << {"id":0,"status":200,"payload":{"markets":[{"base":"0x28BEc7E30E6faee657a03e19Bf1128AaD7632A00","baseDecimals":6,"contract":"0x47fD2f18426f67106DBaC82F6d21D446c5F2120b","kind":"spot","lotSize":"0.01","minQuantity":"1","q …
+  --- 8. documented subscribe, correct array form
+  >> {"operation":"subscribe","channel":"orderbook","params":{"symbols":["SOMI:USDso"]}}
+  << {"channel":"orderbook","type":"subscribed","symbols":["SOMI:USDso"]}
+  << {"channel":"orderbook","type":"snapshot","symbol":"SOMI:USDso","bids":[{"price":"0.1567","quantity":"1687.85"},{"price":"0.1566","quantity":"10127.13"},{"price":"0.1565","quantity":"18566.4"},{"price":"0.1564","quantity" …
+  --- 9. cross-check finding 1 over WS: comma-joined single string
+  >> {"operation":"subscribe","channel":"orderbook","params":{"symbols":["SOMI:USDso,WETH:USDso"]}}
+  << {"type":"error","errorName":"subscription_failed","message":"subscription failed to channel: orderbook"}
+  --- 10. subscribe to a channel the docs do not name
+  >> {"operation":"subscribe","channel":"nonexistent"}
+  << {"type":"error","errorName":"unknown_channel","message":"unknown channel: nonexistent"}
+  [closed] script end code=- reason=-
+
+######## testnet  wss://stg.api.dreamdex.io/v0/ws/public
+  [open] connected
+  --- 1. documented heartbeat: {"operation":"ping"} -> pong
+  >> {"operation":"ping"}
+  << {"operation":"pong","serverTimestamp":1794560466233}
+  --- 2. documented REST-over-WS request shape
+  >> {"id":1,"operation":"getMarkets","params":{"symbol":"SOMI:USDso"}}
+  << {"id":1,"status":200,"payload":{"markets":[{"base":"0x28f34DeFd2b4CB48d9eE6d89f2Be4Bc601694c00","baseDecimals":18,"contract":"0x259fD6559214dd5aD3752322426eA9F9fABEFff4","kind":"spot","lotSize":"0.01","minQuantity":"1"," …
+  --- 3. docs: operation is CASE-INSENSITIVE
+  >> {"id":2,"operation":"GETMARKETS"}
+  << {"id":2,"status":200,"payload":{"markets":[{"base":"0x28f34DeFd2b4CB48d9eE6d89f2Be4Bc601694c00","baseDecimals":18,"contract":"0x259fD6559214dd5aD3752322426eA9F9fABEFff4","kind":"spot","lotSize":"0.01","minQuantity":"1"," …
+  --- 4. docs example error: unknown operation
+  >> {"id":3,"operation":"invalidOp"}
+  << {"type":"error","errorName":"unknown_operation","message":"unknown operation: invalidOp","id":3}
+  --- 5. docs: missing operation -> invalid_request
+  >> {"id":4}
+  << {"type":"error","errorName":"invalid_request","message":"missing operation field","id":4}
+  --- 6. docs: unparseable JSON -> invalid_request
+  >> raw "notjson"
+  << {"type":"error","errorName":"invalid_request","message":"invalid JSON message"}
+  --- 7. docs: id is REQUIRED (integer) - omit it
+  >> {"operation":"getMarkets"}
+  << {"id":0,"status":200,"payload":{"markets":[{"base":"0x28f34DeFd2b4CB48d9eE6d89f2Be4Bc601694c00","baseDecimals":18,"contract":"0x259fD6559214dd5aD3752322426eA9F9fABEFff4","kind":"spot","lotSize":"0.01","minQuantity":"1"," …
+  --- 8. documented subscribe, correct array form
+  >> {"operation":"subscribe","channel":"orderbook","params":{"symbols":["SOMI:USDso"]}}
+  << {"channel":"orderbook","type":"subscribed","symbols":["SOMI:USDso"]}
+  << {"channel":"orderbook","type":"snapshot","symbol":"SOMI:USDso","bids":[{"price":"0.1567","quantity":"529.5"},{"price":"0.1566","quantity":"665.4"},{"price":"0.1565","quantity":"776.3"},{"price":"0.1564","quantity":"1885. …
+  --- 9. cross-check finding 1 over WS: comma-joined single string
+  >> {"operation":"subscribe","channel":"orderbook","params":{"symbols":["SOMI:USDso,WETH:USDso"]}}
+  << {"type":"error","errorName":"subscription_failed","message":"subscription failed to channel: orderbook"}
+  --- 10. subscribe to a channel the docs do not name
+  >> {"operation":"subscribe","channel":"nonexistent"}
+  << {"channel":"orderbook","type":"update","symbol":"SOMI:USDso","bids":[{"price":"0.1567","quantity":"504.5"}],"timestamp":1794560475551}
+  << {"type":"error","errorName":"unknown_channel","message":"unknown channel: nonexistent"}
+  << {"channel":"orderbook","type":"update","symbol":"SOMI:USDso","bids":[{"price":"0.1567","quantity":"554.5"}],"timestamp":1794560476050}
+  [closed] script end code=- reason=-
+
+messages: mainnet=11 testnet=13

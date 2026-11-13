@@ -66,6 +66,7 @@ An integrator who follows the doc and writes one error path — parse JSON, swit
 - Captured 2026-11-07, re-run before filing: `probes/probe-errname.mjs` → `probes/probe-errname.json` (8 cases × both bases, each recording status, `Error-Name` header and body)
 - Header dumps for the three 404 routes above
 - Re-verified 2026-11-12 on both bases with the exact commands in this report: `probes/recheck-03-20261112.mjs` → `probes/recheck-03-20261112.log` — all three router 404s still `text/plain; charset=utf-8` with `(absent)` `Error-Name`, and the in-handler 400 control still JSON with `error-name: missing_field`, in the same run.
+- Re-verified 2026-11-13 on both bases: `probes/recheck-03-20261113.mjs` → `probes/recheck-03-20261113.log` — all three router 404s still `404` / `text/plain; charset=utf-8` / `(absent) Error-Name` with the body `404 page not found`, and the in-handler 400 control in the same run still JSON with `error-name: missing_field`. Unchanged.
 - The two quoted doc sentences re-fetched 2026-11-12 from the `.md` mirror: `probes/docmd-20261112-developers_http-api_error-handling.md`, `probes/docmd-20261112-developers_http-api_market-data.md`
 
 ## Environment

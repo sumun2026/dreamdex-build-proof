@@ -62,12 +62,16 @@ with no error and no documented reason.
    done
    ```
    Observed 2026-11-08: `n=94 oldest=1785974400000` on **every** line, including `limit=200`.
+   Observed 2026-11-13: `n=100 oldest=1785974400000` on **every** line, including `limit=200` — the same
+   oldest bar, six more bars in the series, and the extra parameters still change nothing.
 6. Compare with the WebSocket, same market and interval:
 
    ```js
    ws.send(JSON.stringify({ id: 1, operation: "subscribe", channel: "ohlcv",
      params: { symbol: "SOMI:USDso", timeframe: "1d" } }));
    // snapshot candles.length === 100, oldest 2026-07-31
+   //   (measured 2026-11-08; the WS window is a rolling 100 days ending today, so its oldest bar
+   //    slid to 2026-08-06 by 2026-11-13 — see item 06)
    ```
 
 ## Expected
@@ -96,6 +100,13 @@ REST candle series is both unremovable-by-pagination and known-bad.
 
 - `probes/probe-volume-horizon.mjs` sections "does /candles have the same horizon?" and "are
   from/to/limit accepted at all?" (14 interval/param combinations).
+- Re-run 2026-11-13, five days after the first draft: `probes/probe-volume-horizon.mjs` →
+  `probes/probe-volume-horizon-20261113.log`. The four range parameters are **still ignored**: `limit=200`,
+  `from=…`, `since=…&until=…` and `max=200` each returned `200` with the same `n=100` bars as the bare
+  `interval=1d` request — no pagination, no narrower window, no error. The horizon still differs per
+  interval (`1m` → 100 bars covering ~1.6 h, `1h` → 100 bars, `4h` → 100 bars, `1d` → 100 bars covering
+  2026-08-06 → 2026-11-13). The same run also confirms the `/volume` side of item 02's cap: a 40-day
+  window is honoured, a 60-day window is `400 invalid_param`.
 - `probes/probe-ws-channels3.mjs` section 2 (per-interval WS↔REST bar counts, six intervals).
 - Saved live pages: `probes/LIVE_http-api-trading.txt` (172 lines; `interval` absent), and a
   grep of the full doc set showing `interval` only inside `invalid_interval`.

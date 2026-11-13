@@ -1,0 +1,38 @@
+
+######## https://stg.api.dreamdex.io/v0  re-check 2026-11-13T08:59:57.902Z
+  400  /orderbooks?symbols=SOMI:USDso,WETH:USDso            docs: docs predict 200 []
+       body: {"context":{"invalid_symbols":["SOMI:USDso,WETH:USDso"]},"description":"unknown market symbols: SOMI:USDso,WETH:USDso","name":"invalid_param","status":400}
+
+  400  /orderbooks?symbols=SOMI:USDso,FAKE:USDso            docs: docs predict 200 SOMI only
+       body: {"context":{"invalid_symbols":["SOMI:USDso,FAKE:USDso"]},"description":"unknown market symbols: SOMI:USDso,FAKE:USDso","name":"invalid_param","status":400}
+
+  400  /orderbooks?symbols=FAKE:USDso                       docs: docs predict 200 []
+       body: {"context":{"invalid_symbols":["FAKE:USDso"]},"description":"unknown market symbols: FAKE:USDso","name":"invalid_param","status":400}
+
+  400  /orderbooks?symbols=SOMI                             docs: docs predict 200 []
+       body: {"context":{"invalid_symbols":["SOMI"]},"description":"unknown market symbols: SOMI","name":"invalid_param","status":400}
+
+  400  /tickers?symbols=SOMI:USDso,FAKE:USDso               docs: docs predict 200
+       body: {"context":{"invalid_symbols":["SOMI:USDso,FAKE:USDso"]},"description":"unknown market symbols: SOMI:USDso,FAKE:USDso","name":"invalid_param","status":400}
+
+  200  /orderbooks?symbols=SOMI:USDso&symbols=WETH:USDso    docs: docs predict 200 2 books (control)
+       body: {"orderbooks":[{"asks":[{"price":"0.1566","quantity":"445.5"},{"price":"0.1567","quantity"...
+
+######## https://api.dreamdex.io/v0  re-check 2026-11-13T09:00:03.397Z
+  400  /orderbooks?symbols=SOMI:USDso,WETH:USDso            docs: docs predict 200 []
+       body: {"context":{"invalid_symbols":["SOMI:USDso,WETH:USDso"]},"description":"unknown market symbols: SOMI:USDso,WETH:USDso","name":"invalid_param","status":400}
+
+  400  /orderbooks?symbols=SOMI:USDso,FAKE:USDso            docs: docs predict 200 SOMI only
+       body: {"context":{"invalid_symbols":["SOMI:USDso,FAKE:USDso"]},"description":"unknown market symbols: SOMI:USDso,FAKE:USDso","name":"invalid_param","status":400}
+
+  400  /orderbooks?symbols=FAKE:USDso                       docs: docs predict 200 []
+       body: {"context":{"invalid_symbols":["FAKE:USDso"]},"description":"unknown market symbols: FAKE:USDso","name":"invalid_param","status":400}
+
+  400  /orderbooks?symbols=SOMI                             docs: docs predict 200 []
+       body: {"context":{"invalid_symbols":["SOMI"]},"description":"unknown market symbols: SOMI","name":"invalid_param","status":400}
+
+  400  /tickers?symbols=SOMI:USDso,FAKE:USDso               docs: docs predict 200
+       body: {"context":{"invalid_symbols":["SOMI:USDso,FAKE:USDso"]},"description":"unknown market symbols: SOMI:USDso,FAKE:USDso","name":"invalid_param","status":400}
+
+  200  /orderbooks?symbols=SOMI:USDso&symbols=WETH:USDso    docs: docs predict 200 2 books (control)
+       body: {"orderbooks":[{"asks":[{"price":"0.1566","quantity":"570.14"},{"price":"0.1567","quantity...

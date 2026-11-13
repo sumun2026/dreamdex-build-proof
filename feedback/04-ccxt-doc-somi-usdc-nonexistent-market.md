@@ -80,7 +80,7 @@ in scope for the same fix.
 ## Evidence
 
 - Live page fetch: `https://app.dreamdex.io/docs/developers/libraries/ccxt` → HTTP 200, 278,668 bytes
-  (saved as `src/LIVE_developers_libraries_ccxt.html`; symbol used at extracted lines 132, 140, 148,
+  (saved as `probes/LIVE_developers_libraries_ccxt.txt`; symbol used at extracted lines 132, 140, 148,
   156, 167, 221, 252-254).
 - Live `/v0/currencies` and `/v0/markets` on both environments, 2026-11-08.
 - `ccxt_dreamdex.ts` `parseMarket()` — the adapter builds `symbol` as `base + '/' + quote` from the
@@ -88,6 +88,7 @@ in scope for the same fix.
   `*:USDso` markets above; `SOMI/USDC` can never be produced.
 - Reproduction script: `probes/probe-ccxt-symbol.mjs` (prints `has 'USDC' : false` and
   `'SOMI/USDC' valid? false` for both environments).
+- Re-run 2026-11-13, five days after the first draft: `probes/probe-ccxt-symbol.mjs` → `probes/recheck-04-20261113.log`. Mainnet `/currencies` still `SOMI, USDso, USDC.e, WBTC, WETH` — **`USDC` still absent**, `USDC.e` present — and the unified symbol space still `SOMI/USDso, USDC.e/USDso, WBTC/USDso, WETH/USDso`, so `'SOMI/USDC' valid? false`. On `stg` `/currencies` is `USDso, WBTC, WETH, SOMI` (no `USDC` there either) and the same `false`. Unchanged.
 
 ## What is *not* claimed
 
